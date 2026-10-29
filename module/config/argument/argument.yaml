@@ -367,6 +367,9 @@ Commission:
     > Extra-0:20 > Extra-0:30 > Extra-1:00 > Extra-1:30 > Extra-2:00
     > shortest
   DoMajorCommission: false
+  # Azdaily fork: urgent commissions (gems) often spawn right after sorties;
+  # re-check commissions immediately when a sortie task ends.
+  CheckAfterSortie: false
 Tactical:
   TacticalFilter: |-
     SameT4 > SameT3 > SameT2 > SameT1

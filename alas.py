@@ -14,6 +14,10 @@ from module.exception import *
 from module.logger import logger
 from module.notify import handle_notify
 
+# Azdaily fork: tasks that fight battles; urgent commissions (gems) spawn
+# right after them, so Commission gets re-checked when one ends.
+SORTIE_TASKS = ('Main', 'Main2', 'Event', 'WarArchives', 'GemsFarming', 'Campaign')
+
 
 class AzurLaneAutoScript:
     stop_event: threading.Event = None
@@ -591,6 +595,18 @@ class AzurLaneAutoScript:
             success = self.run(inflection.underscore(task))
             logger.info(f'Scheduler: End task `{task}`')
             self.is_first_task = False
+
+            # Azdaily fork: urgent commissions (gems) often spawn right after
+            # battles, so when a sortie task ends, re-check commissions right
+            # away instead of waiting for the next scheduled slot. The check
+            # respects Commission.Scheduler.Enable and does nothing when the
+            # task is disabled.
+            if task in SORTIE_TASKS and deep_get(
+                    self.config.data, keys='Commission.Commission.CheckAfterSortie',
+                    default=False) and deep_get(
+                    self.config.data, keys='Commission.Scheduler.Enable', default=False):
+                logger.info('Sortie task ended, re-schedule Commission to now')
+                self.config.cross_set('Commission.Scheduler.NextRun', datetime.now())
 
             # Check failures
             failed = deep_get(self.failure_record, keys=task, default=0)
