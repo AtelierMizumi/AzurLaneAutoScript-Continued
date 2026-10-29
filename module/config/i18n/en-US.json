@@ -1449,6 +1449,10 @@
     "DoMajorCommission": {
       "name": "Do Major Commissions",
       "help": "1200 oil commission is now outdated, the yield is very low, it is recommended to disable"
+    },
+    "CheckAfterSortie": {
+      "name": "Check After Sorties",
+      "help": "Re-check commissions immediately when a sortie task (Main/Event/...) finishes, because urgent gem commissions often spawn after battles. Azdaily fork option."
     }
   },
   "Tactical": {
