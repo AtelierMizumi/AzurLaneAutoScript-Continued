@@ -821,15 +821,21 @@ class AlasGUI(Frame):
                 history = updater.get_commit(
                     f"origin/{updater.Branch}", n=20, short_sha1=True
                 )
-                put_table(
-                    [commit for commit in history],
-                    header=[
-                        "SHA1",
-                        t("Gui.Update.Author"),
-                        t("Gui.Update.Time"),
-                        t("Gui.Update.Message"),
-                    ],
-                )
+                if None in history:
+                    # Azdaily fork: upstream refs can be missing on a fresh
+                    # clone or before the branch is ever fetched; render a
+                    # placeholder instead of crashing put_table.
+                    put_text("Commit history unavailable, click Check update first")
+                else:
+                    put_table(
+                        [commit for commit in history],
+                        header=[
+                            "SHA1",
+                            t("Gui.Update.Author"),
+                            t("Gui.Update.Time"),
+                            t("Gui.Update.Message"),
+                        ],
+                    )
 
         def u(state):
             if state == -1:
