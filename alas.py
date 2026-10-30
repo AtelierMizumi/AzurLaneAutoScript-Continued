@@ -98,14 +98,11 @@ class AzurLaneAutoScript:
             logger.info('Game server may be under maintenance or network may be broken, check server status now')
             self.checker.check_now()
             if self.checker.is_available():
-                logger.critical('Game page unknown')
+                logger.warning('Game page unknown. Scheduling restart to recover...')
                 self.save_error_log()
-                handle_notify(
-                    self.config.Error_OnePushConfig,
-                    title=f"Alas <{self.config_name}> crashed",
-                    content=f"<{self.config_name}> GamePageUnknownError",
-                )
-                exit(1)
+                self.config.task_call('Restart')
+                self.device.sleep(10)
+                return False
             else:
                 self.checker.wait_until_available()
                 return False
@@ -582,10 +579,13 @@ class AzurLaneAutoScript:
             self.device.config = self.config
             # Skip first restart
             if self.is_first_task and task == 'Restart':
-                logger.info('Skip task `Restart` at scheduler start')
-                self.config.task_delay(server_update=True)
-                del_cached_property(self, 'config')
-                continue
+                if self.device.app_is_running():
+                    logger.info('App is already running, skip task `Restart` at scheduler start')
+                    self.config.task_delay(server_update=True)
+                    del_cached_property(self, 'config')
+                    continue
+                else:
+                    logger.info('App is not running, executing `Restart` at scheduler start')
 
             # Run
             logger.info(f'Scheduler: Start task `{task}`')

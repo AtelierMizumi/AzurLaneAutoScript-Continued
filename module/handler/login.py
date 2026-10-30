@@ -34,10 +34,21 @@ class LoginHandler(UI):
         confirm_timer = Timer(1.5, count=4).start()
         orientation_timer = Timer(5)
         login_success = False
+        login_timeout = Timer(180).start()
+        stuck_clear_timer = Timer(15).start()
         self.device.stuck_record_clear()
         self.device.click_record_clear()
 
         while 1:
+            if login_timeout.reached():
+                logger.warning('Login timeout after 180s')
+                raise GameStuckError('Login timeout after 180s')
+
+            # Prevent stuck check from killing ALAS while game is booting/loading assets/connecting
+            if not self.is_in_main() and stuck_clear_timer.reached():
+                self.device.stuck_record_clear()
+                stuck_clear_timer.reset()
+
             # Watch device rotation
             if not login_success and orientation_timer.reached():
                 # Screen may rotate after starting an app
@@ -95,7 +106,8 @@ class LoginHandler(UI):
                 continue
             # Popups appear at page_main
             if self.ui_page_main_popups(get_ship=login_success):
-                return True
+                confirm_timer.reset()
+                continue
             # Always goto page_main
             if self.appear_then_click(GOTO_MAIN, offset=(30, 30), interval=5):
                 continue

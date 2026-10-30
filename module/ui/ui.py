@@ -6,7 +6,7 @@ from module.exception import (GameNotRunningError, GamePageUnknownError,
                               RequestHumanTakeover)
 from module.exercise.assets import EXERCISE_PREPARATION
 from module.handler.assets import (AUTO_SEARCH_MENU_EXIT, BATTLE_PASS_NEW_SEASON, BATTLE_PASS_NOTICE, GAME_TIPS,
-                                   LOGIN_ANNOUNCE, LOGIN_ANNOUNCE_2, LOGIN_CHECK, LOGIN_RETURN_SIGN,
+                                   LOGIN_ANNOUNCE, LOGIN_ANNOUNCE_2, LOGIN_CHECK, LOGIN_GAME_UPDATE, LOGIN_RETURN_SIGN,
                                    MAINTENANCE_ANNOUNCE, MONTHLY_PASS_NOTICE)
 from module.handler.info_handler import InfoHandler
 from module.logger import logger
@@ -164,10 +164,14 @@ class UI(InfoHandler):
         """
         logger.info("UI get current page")
 
-        @run_once
-        def app_check():
-            if not self.device.app_is_running():
-                raise GameNotRunningError("Game not running")
+        # Automatically start the game if it is not running
+        if not self.device.app_is_running():
+            logger.warning("Game is not running. Starting game client automatically...")
+            from module.handler.login import LoginHandler
+            login_handler = LoginHandler(self.config, device=self.device)
+            login_handler.app_start()
+            self.ui_current = page_main
+            return page_main
 
         @run_once
         def minicap_check():
@@ -198,6 +202,19 @@ class UI(InfoHandler):
                     self.ui_current = page
                     return page
 
+            # Check if game is in login / announcement sequence
+            if (self.appear(LOGIN_CHECK, offset=(30, 30))
+                    or self.appear(LOGIN_ANNOUNCE, offset=(30, 30))
+                    or self.appear(LOGIN_ANNOUNCE_2, offset=(30, 30))
+                    or self.appear(LOGIN_GAME_UPDATE, offset=(30, 30))
+                    or self.appear(MAINTENANCE_ANNOUNCE, offset=(30, 30))):
+                logger.info("Login sequence detected in current page. Entering login handler...")
+                from module.handler.login import LoginHandler
+                login_handler = LoginHandler(self.config, device=self.device)
+                login_handler.handle_app_login()
+                self.ui_current = page_main
+                return page_main
+
             # Unknown page but able to handle
             logger.info("Unknown ui page")
             if self.appear_then_click(GOTO_MAIN, offset=(30, 30), interval=2):
@@ -213,12 +230,34 @@ class UI(InfoHandler):
                 timeout.reset()
                 continue
 
-            app_check()
+            if not self.device.app_is_running():
+                logger.warning("Game died. Starting game client automatically...")
+                from module.handler.login import LoginHandler
+                login_handler = LoginHandler(self.config, device=self.device)
+                login_handler.app_start()
+                self.ui_current = page_main
+                return page_main
+
             minicap_check()
             # continuously check rotation
             if orientation_timer.reached():
                 self.device.get_orientation()
                 orientation_timer.reset()
+
+        # If no recognized page was found within timeout, the game may still be loading,
+        # updating assets ("Update complete. Loading game..."), or connecting to server.
+        logger.info("Page is not a recognized in-game page. Game may be loading, updating, or logging in.")
+        logger.info("Engaging LoginHandler to wait for loading and complete login...")
+        from module.handler.login import LoginHandler
+        login_handler = LoginHandler(self.config, device=self.device)
+        try:
+            login_handler.handle_app_login()
+            if self.is_in_main():
+                logger.info("Successfully reached main page via login handler")
+                self.ui_current = page_main
+                return page_main
+        except Exception as e:
+            logger.warning(f"Login handler was unable to reach main page: {e}")
 
         # Unknown page, need manual switching
         logger.warning("Unknown ui page")
