@@ -4,7 +4,7 @@ import inflection
 
 from module.base.timer import Timer
 from module.config.utils import get_os_reset_remain
-from module.exception import CampaignEnd, GameTooManyClickError, MapWalkError, RequestHumanTakeover, ScriptError
+from module.exception import CampaignEnd, GameBugError, GameStuckError, GameTooManyClickError, MapWalkError, RequestHumanTakeover, ScriptError
 from module.handler.login import LoginHandler, MAINTENANCE_ANNOUNCE
 from module.logger import logger
 from module.map.map import Map
@@ -482,6 +482,10 @@ class OSMap(OSFleet, Map, GlobeCamera, StrategicSearchHandler):
         unlock_check_timer = Timer(5, count=10).start()
         self.ash_popup_canceled = False
 
+        # Delay before clicking auto search to allow OpSi map to finish loading, animations to settle, and server sync to complete
+        auto_search_delay = Timer(3.5).start()
+        auto_search_click_count = 0
+
         success = True
         finished_combat = 0
         died_timer = Timer(1.5, count=3)
@@ -494,13 +498,16 @@ class OSMap(OSFleet, Map, GlobeCamera, StrategicSearchHandler):
                                 'before using any OpSi functions')
                 raise RequestHumanTakeover
             if self.is_in_map():
-                self.device.stuck_record_clear()
                 if not success:
                     if died_timer.reached():
                         logger.warning('Fleet died confirm')
                         break
                 else:
                     died_timer.reset()
+                # Clear stuck record only when auto search is actively running (ON)
+                if self.appear(AUTO_SEARCH_OS_MAP_OPTION_ON, offset=(5, 120)):
+                    self.device.stuck_record_clear()
+                    auto_search_click_count = 0
             else:
                 died_timer.reset()
 
@@ -511,18 +518,34 @@ class OSMap(OSFleet, Map, GlobeCamera, StrategicSearchHandler):
                     unlock_checked = True
                 elif self.appear(AUTO_SEARCH_OS_MAP_OPTION_ON, offset=(5, 120)):
                     unlock_checked = True
+                    auto_search_click_count = 0
+
+            if self.appear(AUTO_SEARCH_OS_MAP_OPTION_ON, offset=(5, 120)):
+                auto_search_click_count = 0
 
             if self.handle_os_auto_search_map_option(
                     drop=drop,
-                    enable=success
+                    enable=success if auto_search_delay.reached() else None
             ):
                 unlock_checked = True
+                auto_search_click_count += 1
+                logger.info(f'Auto search option clicked, count={auto_search_click_count}')
+                if auto_search_click_count >= 4:
+                    logger.warning(
+                        'Auto search toggled 4 times without activation. '
+                        'Detected OpSi map UI/network freeze (protocol 33103 timeout). '
+                        'Triggering client restart recovery.'
+                    )
+                    raise GameBugError('Operation Siren Auto Search unresponsive (Protocol 33103 timeout)')
                 continue
             if self.handle_retirement():
                 # Retire will interrupt auto search, need a retry
                 self.ash_popup_canceled = True
+                auto_search_delay.reset()
+                auto_search_click_count = 0
                 continue
             if self.combat_appear():
+                auto_search_click_count = 0
                 self.on_auto_search_battle_count_add()
                 if strategic and self.config.task_switched():
                     self.interrupt_auto_search()
@@ -535,8 +558,11 @@ class OSMap(OSFleet, Map, GlobeCamera, StrategicSearchHandler):
                         success = False
                         logger.warning('Fleet died, stop auto search')
                         continue
+                auto_search_delay.reset()
             if self.handle_map_event():
                 # Auto search can not handle siren searching device.
+                auto_search_delay.reset()
+                auto_search_click_count = 0
                 continue
 
         return finished_combat

@@ -18,7 +18,7 @@ class EnemySearchingHandler(EnemySearchingHandler_):
         When entering a os map, radar and buttons slide out from the right.
         Wait until they slide to the final position.
         """
-        for _ in self.loop(timeout=1):
+        for _ in self.loop(timeout=3):
             if self.appear(ORDER_ENTER, offset=(20, 20)):
                 break
             # A game bug that AUTO_SEARCH_REWARD from the last cleared zone popups
@@ -26,3 +26,6 @@ class EnemySearchingHandler(EnemySearchingHandler_):
                 continue
         else:
             logger.warning('wait_os_map_buttons timeout, assume waited')
+
+        # Allow time for OpSi map to finish loading, animations to settle, and server sync to complete
+        self.device.sleep(2.0)
