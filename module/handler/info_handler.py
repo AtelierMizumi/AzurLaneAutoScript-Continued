@@ -4,7 +4,7 @@ from module.base.base import ModuleBase
 from module.base.button import Button
 from module.base.timer import Timer
 from module.base.utils import *
-from module.exception import GameNotRunningError
+from module.exception import GameNotRunningError, RequestHumanTakeover
 from module.handler.assets import *
 from module.logger import logger
 from module.os_handler.assets import CLICK_SAFE_AREA as OS_CLICK_SAFE_AREA
@@ -94,6 +94,17 @@ class InfoHandler(ModuleBase):
     def handle_popup_confirm(self, name='', offset=None, interval=2):
         if offset is None:
             offset = self._popup_offset
+        # Azdaily fork: never confirm a purchase popup that costs gems.
+        # The generic confirm used to auto-click Confirm on the
+        # "Spend 50Gems to buy 929 Oil" refill dialog during sorties.
+        if (self.appear(POPUP_CANCEL, offset=offset)
+                or self.appear(POPUP_CONFIRM, offset=offset)
+                or self.appear(POPUP_CONFIRM_WHITE, offset=offset)) \
+                and self.appear(GEM_PURCHASE_CHECK, offset=(40, 40)):
+            logger.critical('Gem purchase popup detected (price line has the gem icon)')
+            logger.critical('Clicking Cancel and stopping; gem spending is not allowed')
+            self.device.click(POPUP_CANCEL)
+            raise RequestHumanTakeover
         if self.appear(POPUP_CANCEL, offset=offset) \
                 and self.appear(POPUP_CONFIRM, offset=offset, interval=interval):
             POPUP_CONFIRM.name = POPUP_CONFIRM.name + '_' + name
