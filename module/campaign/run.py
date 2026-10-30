@@ -382,6 +382,17 @@ class CampaignRun(CampaignEvent):
         name, folder = self.handle_stage_name(name, folder, mode=mode)
         self.config.override(Campaign_Name=name, Campaign_Event=folder)
         self.load_campaign(name, folder=folder)
+
+        # Azdaily fork: FleetScheduler refreshes the shipyard research
+        # target cache and, for main chapters, arranges farm fleets on the
+        # formation screen before entering the map (the select-fleet popup
+        # does not allow member editing there).
+        try:
+            from module.fleet_scheduler.scheduler import FleetScheduler
+            FleetScheduler(self.config, device=self.device).before_stage()
+        except Exception as e:
+            logger.warning(f'FleetScheduler before_stage error: {e}')
+
         self.run_count = 0
         self.run_limit = self.config.StopCondition_RunCount
         while 1:

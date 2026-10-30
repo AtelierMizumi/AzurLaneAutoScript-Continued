@@ -1300,12 +1300,17 @@
   "FarmFleet1": {
     "_info": {
       "name": "Farm Fleet 1",
-      "help": "Azdaily fork. Fleet 1 slot targets for research EXP farming. Each slot is either `keep` (never touched) or a faction to auto-fill from the dock filter."
+      "help": "Azdaily fork. Farm fleet A = your fleet #Number. Main chapters are arranged on the Formation screen (flagship and vanguard lead only, the game does not allow member editing on their select-fleet popup); event stages arrange all six slots right on the select-fleet popup. Fleets not listed here are never touched."
+    },
+    "Number": {
+      "name": "Fleet Number",
+      "help": "Your fleet number this group manages, 0 to disable. Default 5. Set the sortie task's Fleet > Fleet 1 to this number so the map actually uses it. New players usually only have fleets 1-2 unlocked - configure what you have."
     },
     "Backline1": {
       "name": "Backline Left",
-      "help": "Main fleet slot. Set a faction to auto-fill this slot with a ship of that faction: lowest level first, not max level, enough morale, not in any fleet. `keep` leaves the slot untouched.",
+      "help": "Main fleet slot (event preparation screens only). `research` follows the shipyard target's current phase, a faction fills that faction, `keep` leaves the slot untouched.",
       "keep": "keep",
+      "research": "research",
       "eagle": "eagle",
       "royal": "royal",
       "sakura": "sakura",
@@ -1318,8 +1323,9 @@
     },
     "Flagship": {
       "name": "Flagship",
-      "help": "Main fleet middle slot, earns 1.5x EXP. Set a faction to auto-fill it, `keep` to leave untouched.",
+      "help": "Main fleet middle slot, earns 1.5x EXP, editable on the Formation screen too. `research` follows the shipyard target's current phase (fills only when the target farms the main fleet), a faction fills that faction, `keep` leaves the slot untouched.",
       "keep": "keep",
+      "research": "research",
       "eagle": "eagle",
       "royal": "royal",
       "sakura": "sakura",
@@ -1332,8 +1338,9 @@
     },
     "Backline3": {
       "name": "Backline Right",
-      "help": "Main fleet slot. Set a faction to auto-fill this slot, `keep` to leave untouched.",
+      "help": "Main fleet slot (event preparation screens only). `research` follows the shipyard target's current phase, a faction fills that faction, `keep` leaves the slot untouched.",
       "keep": "keep",
+      "research": "research",
       "eagle": "eagle",
       "royal": "royal",
       "sakura": "sakura",
@@ -1346,8 +1353,9 @@
     },
     "Vanguard1": {
       "name": "Vanguard Lead",
-      "help": "Vanguard lead slot takes the most damage, usually kept as a tank (`keep`). Set a faction to auto-fill it instead.",
+      "help": "Vanguard lead slot, editable on the Formation screen too, but it takes the most damage - keep LevelMin high enough for the stage. `research` follows the shipyard target's current phase (fills only when the target farms the vanguard), a faction fills that faction, `keep` leaves the slot untouched.",
       "keep": "keep",
+      "research": "research",
       "eagle": "eagle",
       "royal": "royal",
       "sakura": "sakura",
@@ -1360,8 +1368,9 @@
     },
     "Vanguard2": {
       "name": "Vanguard Middle",
-      "help": "Vanguard slot, well protected. Set a faction to auto-fill this slot, `keep` to leave untouched.",
+      "help": "Vanguard slot (event preparation screens only). `research` follows the shipyard target's current phase, a faction fills that faction, `keep` leaves the slot untouched.",
       "keep": "keep",
+      "research": "research",
       "eagle": "eagle",
       "royal": "royal",
       "sakura": "sakura",
@@ -1374,8 +1383,9 @@
     },
     "Vanguard3": {
       "name": "Vanguard Rear",
-      "help": "Vanguard slot, well protected. Set a faction to auto-fill this slot, `keep` to leave untouched.",
+      "help": "Vanguard slot (event preparation screens only). `research` follows the shipyard target's current phase, a faction fills that faction, `keep` leaves the slot untouched.",
       "keep": "keep",
+      "research": "research",
       "eagle": "eagle",
       "royal": "royal",
       "sakura": "sakura",
@@ -1390,12 +1400,17 @@
   "FarmFleet2": {
     "_info": {
       "name": "Farm Fleet 2",
-      "help": "Azdaily fork. Fleet 2 slot targets for research EXP farming. Each slot is either `keep` (never touched) or a faction to auto-fill from the dock filter."
+      "help": "Azdaily fork. Farm fleet B = your fleet #Number. Main chapters are arranged on the Formation screen (flagship and vanguard lead only, the game does not allow member editing on their select-fleet popup); event stages arrange all six slots right on the select-fleet popup. Fleets not listed here are never touched."
+    },
+    "Number": {
+      "name": "Fleet Number",
+      "help": "Your fleet number this group manages, 0 to disable. Default 6. Set the sortie task's Fleet > Fleet 2 to this number so the map actually uses it. New players usually only have fleets 1-2 unlocked - configure what you have."
     },
     "Backline1": {
       "name": "Backline Left",
-      "help": "Main fleet slot. Set a faction to auto-fill this slot with a ship of that faction: lowest level first, not max level, enough morale, not in any fleet. `keep` leaves the slot untouched.",
+      "help": "Main fleet slot (event preparation screens only). `research` follows the shipyard target's current phase, a faction fills that faction, `keep` leaves the slot untouched.",
       "keep": "keep",
+      "research": "research",
       "eagle": "eagle",
       "royal": "royal",
       "sakura": "sakura",
@@ -1408,8 +1423,9 @@
     },
     "Flagship": {
       "name": "Flagship",
-      "help": "Main fleet middle slot, earns 1.5x EXP. Set a faction to auto-fill it, `keep` to leave untouched.",
+      "help": "Main fleet middle slot, earns 1.5x EXP, editable on the Formation screen too. `research` follows the shipyard target's current phase (fills only when the target farms the main fleet), a faction fills that faction, `keep` leaves the slot untouched.",
       "keep": "keep",
+      "research": "research",
       "eagle": "eagle",
       "royal": "royal",
       "sakura": "sakura",
@@ -1422,8 +1438,9 @@
     },
     "Backline3": {
       "name": "Backline Right",
-      "help": "Main fleet slot. Set a faction to auto-fill this slot, `keep` to leave untouched.",
+      "help": "Main fleet slot (event preparation screens only). `research` follows the shipyard target's current phase, a faction fills that faction, `keep` leaves the slot untouched.",
       "keep": "keep",
+      "research": "research",
       "eagle": "eagle",
       "royal": "royal",
       "sakura": "sakura",
@@ -1436,8 +1453,9 @@
     },
     "Vanguard1": {
       "name": "Vanguard Lead",
-      "help": "Vanguard lead slot takes the most damage, usually kept as a tank (`keep`). Set a faction to auto-fill it instead.",
+      "help": "Vanguard lead slot, editable on the Formation screen too, but it takes the most damage - keep LevelMin high enough for the stage. `research` follows the shipyard target's current phase (fills only when the target farms the vanguard), a faction fills that faction, `keep` leaves the slot untouched.",
       "keep": "keep",
+      "research": "research",
       "eagle": "eagle",
       "royal": "royal",
       "sakura": "sakura",
@@ -1450,8 +1468,9 @@
     },
     "Vanguard2": {
       "name": "Vanguard Middle",
-      "help": "Vanguard slot, well protected. Set a faction to auto-fill this slot, `keep` to leave untouched.",
+      "help": "Vanguard slot (event preparation screens only). `research` follows the shipyard target's current phase, a faction fills that faction, `keep` leaves the slot untouched.",
       "keep": "keep",
+      "research": "research",
       "eagle": "eagle",
       "royal": "royal",
       "sakura": "sakura",
@@ -1464,8 +1483,9 @@
     },
     "Vanguard3": {
       "name": "Vanguard Rear",
-      "help": "Vanguard slot, well protected. Set a faction to auto-fill this slot, `keep` to leave untouched.",
+      "help": "Vanguard slot (event preparation screens only). `research` follows the shipyard target's current phase, a faction fills that faction, `keep` leaves the slot untouched.",
       "keep": "keep",
+      "research": "research",
       "eagle": "eagle",
       "royal": "royal",
       "sakura": "sakura",
@@ -1480,7 +1500,7 @@
   "Rotation": {
     "_info": {
       "name": "Rotation Settings",
-      "help": "Azdaily fork. Thresholds controlling how Fleet Scheduler rotates farm ships."
+      "help": "Azdaily fork. Thresholds for rotating farm ships.\n\nStage guide (oil cap per mob battle -> fleet level band):\n- 9-1 (~27 oil): fleets still Limit Breaking, level 70-85\n- 11-1 (~32 oil): full Limit Break, level 85-100, best EXP per oil under 100\n- 12-4 (~42 oil): level 100+, highest EXP and coin income\nSet Campaign_Name on your sortie task accordingly and keep RotateLevel near the stage's level band."
     },
     "CandidateSort": {
       "name": "Candidate Order",
@@ -1490,7 +1510,7 @@
     },
     "RotateLevel": {
       "name": "Rotate At Level",
-      "help": "Swap a farm slot's ship out when the highest ship of that faction and row already in farm fleets reaches this level. 0 disables level-based rotation (only fills empty or wrong-faction slots)."
+      "help": "Swap a farm slot's ship out when the lowest ship of the target faction and row already in the farm fleet reaches this level. 0 disables level-based rotation (only fills empty or wrong-faction slots)."
     },
     "LevelMin": {
       "name": "Candidate Min Level",
@@ -1499,6 +1519,24 @@
     "EmotionMin": {
       "name": "Candidate Min Morale",
       "help": "Candidates must have at least this morale (0-150). 120+ gives the +20% EXP bonus."
+    },
+    "ResearchKind": {
+      "name": "Target Kind",
+      "help": "PR (Priority, 1M + 2M EXP) or DR (Decisive, 1.2M + 2.4M EXP).",
+      "pr": "pr",
+      "dr": "dr"
+    },
+    "ResearchSeries": {
+      "name": "Shipyard Series",
+      "help": "Shipyard series of your research target, 1-9. Example: Orage is PR series 9, slot 5 -> series 9, index 5."
+    },
+    "ResearchShipIndex": {
+      "name": "Ship Index",
+      "help": "1-based position of the ship on the series' face bar in the shipyard (check by eye once, the in-game order may differ from the wiki), 0 to disable. Example: Orage is the 4th face of series 9."
+    },
+    "ResearchState": {
+      "name": "Research State",
+      "help": "Cached shipyard reading (phase, factions, row), managed automatically before each sortie task."
     }
   },
   "EventGeneral": {

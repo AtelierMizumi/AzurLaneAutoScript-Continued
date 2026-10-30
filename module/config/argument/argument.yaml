@@ -287,43 +287,45 @@ EquipmentCode:
     value: |-
 
 FarmFleet1:
+  Number: 5
   Backline1:
     value: keep
-    option: [ keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
+    option: [ keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
   Flagship:
     value: keep
-    option: [ keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
+    option: [ keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
   Backline3:
     value: keep
-    option: [ keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
+    option: [ keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
   Vanguard1:
     value: keep
-    option: [ keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
+    option: [ keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
   Vanguard2:
     value: keep
-    option: [ keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
+    option: [ keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
   Vanguard3:
     value: keep
-    option: [ keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
+    option: [ keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
 FarmFleet2:
+  Number: 6
   Backline1:
     value: keep
-    option: [ keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
+    option: [ keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
   Flagship:
     value: keep
-    option: [ keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
+    option: [ keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
   Backline3:
     value: keep
-    option: [ keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
+    option: [ keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
   Vanguard1:
     value: keep
-    option: [ keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
+    option: [ keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
   Vanguard2:
     value: keep
-    option: [ keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
+    option: [ keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
   Vanguard3:
     value: keep
-    option: [ keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
+    option: [ keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
 Rotation:
   CandidateSort:
     value: level_asc
@@ -331,6 +333,15 @@ Rotation:
   RotateLevel: 100
   LevelMin: 1
   EmotionMin: 0
+  ResearchKind:
+    value: pr
+    option: [ pr, dr ]
+  ResearchSeries: 9
+  ResearchShipIndex: 4
+  ResearchState:
+    type: textarea
+    display: hide
+    value: ''
 
 # ==================== Event ====================
 

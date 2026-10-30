@@ -287,12 +287,15 @@ class FleetPreparation(InfoHandler):
         if self.map_fleet_checked:
             return False
 
-        # Azdaily fork: fill/rotate farm-fleet slots by faction (FleetScheduler
-        # task config) once per task run, right before battle.
-        from module.fleet_scheduler.scheduler import FleetScheduler
-        plan = FleetScheduler.slot_plan(self.config.data)
-        if plan:
-            FleetScheduler(self.config, device=self.device).apply(plan)
+        # Azdaily fork: fill/rotate farm-fleet slots by faction
+        # (FleetScheduler task config) once per task run, right before
+        # battle. Main chapters are arranged on the formation screen
+        # instead (CampaignRun.run), the select-fleet popup does not
+        # allow member editing there.
+        if getattr(self.config, 'Campaign_Event', 'campaign_main') != 'campaign_main':
+            from module.fleet_scheduler.scheduler import FleetScheduler
+            FleetScheduler(self.config, device=self.device).apply_on_preparation(
+                role_fleets=(self.config.Fleet_Fleet1, self.config.Fleet_Fleet2))
 
         if self.appear(FLEET_1_CLEAR, offset=FleetOperator.OFFSET):
             AUTO_SEARCH_SET_MOB.load_offset(FLEET_1_CLEAR)

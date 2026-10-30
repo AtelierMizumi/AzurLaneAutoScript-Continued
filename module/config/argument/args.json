@@ -1986,11 +1986,16 @@
   },
   "FleetScheduler": {
     "FarmFleet1": {
+      "Number": {
+        "type": "input",
+        "value": 5
+      },
       "Backline1": {
         "type": "select",
         "value": "keep",
         "option": [
           "keep",
+          "research",
           "eagle",
           "royal",
           "sakura",
@@ -2007,6 +2012,7 @@
         "value": "keep",
         "option": [
           "keep",
+          "research",
           "eagle",
           "royal",
           "sakura",
@@ -2023,6 +2029,7 @@
         "value": "keep",
         "option": [
           "keep",
+          "research",
           "eagle",
           "royal",
           "sakura",
@@ -2039,6 +2046,7 @@
         "value": "keep",
         "option": [
           "keep",
+          "research",
           "eagle",
           "royal",
           "sakura",
@@ -2055,6 +2063,7 @@
         "value": "keep",
         "option": [
           "keep",
+          "research",
           "eagle",
           "royal",
           "sakura",
@@ -2071,6 +2080,7 @@
         "value": "keep",
         "option": [
           "keep",
+          "research",
           "eagle",
           "royal",
           "sakura",
@@ -2084,11 +2094,16 @@
       }
     },
     "FarmFleet2": {
+      "Number": {
+        "type": "input",
+        "value": 6
+      },
       "Backline1": {
         "type": "select",
         "value": "keep",
         "option": [
           "keep",
+          "research",
           "eagle",
           "royal",
           "sakura",
@@ -2105,6 +2120,7 @@
         "value": "keep",
         "option": [
           "keep",
+          "research",
           "eagle",
           "royal",
           "sakura",
@@ -2121,6 +2137,7 @@
         "value": "keep",
         "option": [
           "keep",
+          "research",
           "eagle",
           "royal",
           "sakura",
@@ -2137,6 +2154,7 @@
         "value": "keep",
         "option": [
           "keep",
+          "research",
           "eagle",
           "royal",
           "sakura",
@@ -2153,6 +2171,7 @@
         "value": "keep",
         "option": [
           "keep",
+          "research",
           "eagle",
           "royal",
           "sakura",
@@ -2169,6 +2188,7 @@
         "value": "keep",
         "option": [
           "keep",
+          "research",
           "eagle",
           "royal",
           "sakura",
@@ -2201,6 +2221,27 @@
       "EmotionMin": {
         "type": "input",
         "value": 0
+      },
+      "ResearchKind": {
+        "type": "select",
+        "value": "pr",
+        "option": [
+          "pr",
+          "dr"
+        ]
+      },
+      "ResearchSeries": {
+        "type": "input",
+        "value": 9
+      },
+      "ResearchShipIndex": {
+        "type": "input",
+        "value": 4
+      },
+      "ResearchState": {
+        "type": "textarea",
+        "value": "",
+        "display": "hide"
       }
     },
     "Storage": {

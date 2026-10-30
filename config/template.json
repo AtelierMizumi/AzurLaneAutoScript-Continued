@@ -373,6 +373,7 @@
   },
   "FleetScheduler": {
     "FarmFleet1": {
+      "Number": 5,
       "Backline1": "keep",
       "Flagship": "keep",
       "Backline3": "keep",
@@ -381,6 +382,7 @@
       "Vanguard3": "keep"
     },
     "FarmFleet2": {
+      "Number": 6,
       "Backline1": "keep",
       "Flagship": "keep",
       "Backline3": "keep",
@@ -392,7 +394,11 @@
       "CandidateSort": "level_asc",
       "RotateLevel": 100,
       "LevelMin": 1,
-      "EmotionMin": 0
+      "EmotionMin": 0,
+      "ResearchKind": "pr",
+      "ResearchSeries": 9,
+      "ResearchShipIndex": 4,
+      "ResearchState": null
     },
     "Storage": {
       "Storage": {}

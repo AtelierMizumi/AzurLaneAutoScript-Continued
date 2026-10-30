@@ -159,26 +159,32 @@ class GeneratedConfig:
     EquipmentCode_Config = None
 
     # Group `FarmFleet1`
-    FarmFleet1_Backline1 = 'keep'  # keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon
-    FarmFleet1_Flagship = 'keep'  # keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon
-    FarmFleet1_Backline3 = 'keep'  # keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon
-    FarmFleet1_Vanguard1 = 'keep'  # keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon
-    FarmFleet1_Vanguard2 = 'keep'  # keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon
-    FarmFleet1_Vanguard3 = 'keep'  # keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon
+    FarmFleet1_Number = 5
+    FarmFleet1_Backline1 = 'keep'  # keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon
+    FarmFleet1_Flagship = 'keep'  # keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon
+    FarmFleet1_Backline3 = 'keep'  # keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon
+    FarmFleet1_Vanguard1 = 'keep'  # keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon
+    FarmFleet1_Vanguard2 = 'keep'  # keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon
+    FarmFleet1_Vanguard3 = 'keep'  # keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon
 
     # Group `FarmFleet2`
-    FarmFleet2_Backline1 = 'keep'  # keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon
-    FarmFleet2_Flagship = 'keep'  # keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon
-    FarmFleet2_Backline3 = 'keep'  # keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon
-    FarmFleet2_Vanguard1 = 'keep'  # keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon
-    FarmFleet2_Vanguard2 = 'keep'  # keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon
-    FarmFleet2_Vanguard3 = 'keep'  # keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon
+    FarmFleet2_Number = 6
+    FarmFleet2_Backline1 = 'keep'  # keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon
+    FarmFleet2_Flagship = 'keep'  # keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon
+    FarmFleet2_Backline3 = 'keep'  # keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon
+    FarmFleet2_Vanguard1 = 'keep'  # keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon
+    FarmFleet2_Vanguard2 = 'keep'  # keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon
+    FarmFleet2_Vanguard3 = 'keep'  # keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon
 
     # Group `Rotation`
     Rotation_CandidateSort = 'level_asc'  # level_asc, level_desc
     Rotation_RotateLevel = 100
     Rotation_LevelMin = 1
     Rotation_EmotionMin = 0
+    Rotation_ResearchKind = 'pr'  # pr, dr
+    Rotation_ResearchSeries = 9
+    Rotation_ResearchShipIndex = 4
+    Rotation_ResearchState = None
 
     # Group `EventGeneral`
     EventGeneral_PtLimit = 0
