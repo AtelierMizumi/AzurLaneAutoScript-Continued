@@ -64,6 +64,10 @@ Farm:
       - Fleet
       - Submarine
       - Emotion
+    FleetScheduler:
+      - FarmFleet1
+      - FarmFleet2
+      - Rotation
 
 # ==================== Event ====================
 

@@ -66,6 +66,10 @@
       "name": "刷紧急委托",
       "help": ""
     },
+    "FleetScheduler": {
+      "name": "Task.FleetScheduler.name",
+      "help": "Task.FleetScheduler.help"
+    },
     "EventGeneral": {
       "name": "活动通用设置",
       "help": ""
@@ -1293,6 +1297,210 @@
       "help": "格式为yaml"
     }
   },
+  "FarmFleet1": {
+    "_info": {
+      "name": "FarmFleet1._info.name",
+      "help": "FarmFleet1._info.help"
+    },
+    "Backline1": {
+      "name": "FarmFleet1.Backline1.name",
+      "help": "FarmFleet1.Backline1.help",
+      "keep": "keep",
+      "eagle": "eagle",
+      "royal": "royal",
+      "sakura": "sakura",
+      "iron": "iron",
+      "sardegna": "sardegna",
+      "northern": "northern",
+      "iris": "iris",
+      "vichya": "vichya",
+      "dragon": "dragon"
+    },
+    "Flagship": {
+      "name": "FarmFleet1.Flagship.name",
+      "help": "FarmFleet1.Flagship.help",
+      "keep": "keep",
+      "eagle": "eagle",
+      "royal": "royal",
+      "sakura": "sakura",
+      "iron": "iron",
+      "sardegna": "sardegna",
+      "northern": "northern",
+      "iris": "iris",
+      "vichya": "vichya",
+      "dragon": "dragon"
+    },
+    "Backline3": {
+      "name": "FarmFleet1.Backline3.name",
+      "help": "FarmFleet1.Backline3.help",
+      "keep": "keep",
+      "eagle": "eagle",
+      "royal": "royal",
+      "sakura": "sakura",
+      "iron": "iron",
+      "sardegna": "sardegna",
+      "northern": "northern",
+      "iris": "iris",
+      "vichya": "vichya",
+      "dragon": "dragon"
+    },
+    "Vanguard1": {
+      "name": "FarmFleet1.Vanguard1.name",
+      "help": "FarmFleet1.Vanguard1.help",
+      "keep": "keep",
+      "eagle": "eagle",
+      "royal": "royal",
+      "sakura": "sakura",
+      "iron": "iron",
+      "sardegna": "sardegna",
+      "northern": "northern",
+      "iris": "iris",
+      "vichya": "vichya",
+      "dragon": "dragon"
+    },
+    "Vanguard2": {
+      "name": "FarmFleet1.Vanguard2.name",
+      "help": "FarmFleet1.Vanguard2.help",
+      "keep": "keep",
+      "eagle": "eagle",
+      "royal": "royal",
+      "sakura": "sakura",
+      "iron": "iron",
+      "sardegna": "sardegna",
+      "northern": "northern",
+      "iris": "iris",
+      "vichya": "vichya",
+      "dragon": "dragon"
+    },
+    "Vanguard3": {
+      "name": "FarmFleet1.Vanguard3.name",
+      "help": "FarmFleet1.Vanguard3.help",
+      "keep": "keep",
+      "eagle": "eagle",
+      "royal": "royal",
+      "sakura": "sakura",
+      "iron": "iron",
+      "sardegna": "sardegna",
+      "northern": "northern",
+      "iris": "iris",
+      "vichya": "vichya",
+      "dragon": "dragon"
+    }
+  },
+  "FarmFleet2": {
+    "_info": {
+      "name": "FarmFleet2._info.name",
+      "help": "FarmFleet2._info.help"
+    },
+    "Backline1": {
+      "name": "FarmFleet2.Backline1.name",
+      "help": "FarmFleet2.Backline1.help",
+      "keep": "keep",
+      "eagle": "eagle",
+      "royal": "royal",
+      "sakura": "sakura",
+      "iron": "iron",
+      "sardegna": "sardegna",
+      "northern": "northern",
+      "iris": "iris",
+      "vichya": "vichya",
+      "dragon": "dragon"
+    },
+    "Flagship": {
+      "name": "FarmFleet2.Flagship.name",
+      "help": "FarmFleet2.Flagship.help",
+      "keep": "keep",
+      "eagle": "eagle",
+      "royal": "royal",
+      "sakura": "sakura",
+      "iron": "iron",
+      "sardegna": "sardegna",
+      "northern": "northern",
+      "iris": "iris",
+      "vichya": "vichya",
+      "dragon": "dragon"
+    },
+    "Backline3": {
+      "name": "FarmFleet2.Backline3.name",
+      "help": "FarmFleet2.Backline3.help",
+      "keep": "keep",
+      "eagle": "eagle",
+      "royal": "royal",
+      "sakura": "sakura",
+      "iron": "iron",
+      "sardegna": "sardegna",
+      "northern": "northern",
+      "iris": "iris",
+      "vichya": "vichya",
+      "dragon": "dragon"
+    },
+    "Vanguard1": {
+      "name": "FarmFleet2.Vanguard1.name",
+      "help": "FarmFleet2.Vanguard1.help",
+      "keep": "keep",
+      "eagle": "eagle",
+      "royal": "royal",
+      "sakura": "sakura",
+      "iron": "iron",
+      "sardegna": "sardegna",
+      "northern": "northern",
+      "iris": "iris",
+      "vichya": "vichya",
+      "dragon": "dragon"
+    },
+    "Vanguard2": {
+      "name": "FarmFleet2.Vanguard2.name",
+      "help": "FarmFleet2.Vanguard2.help",
+      "keep": "keep",
+      "eagle": "eagle",
+      "royal": "royal",
+      "sakura": "sakura",
+      "iron": "iron",
+      "sardegna": "sardegna",
+      "northern": "northern",
+      "iris": "iris",
+      "vichya": "vichya",
+      "dragon": "dragon"
+    },
+    "Vanguard3": {
+      "name": "FarmFleet2.Vanguard3.name",
+      "help": "FarmFleet2.Vanguard3.help",
+      "keep": "keep",
+      "eagle": "eagle",
+      "royal": "royal",
+      "sakura": "sakura",
+      "iron": "iron",
+      "sardegna": "sardegna",
+      "northern": "northern",
+      "iris": "iris",
+      "vichya": "vichya",
+      "dragon": "dragon"
+    }
+  },
+  "Rotation": {
+    "_info": {
+      "name": "Rotation._info.name",
+      "help": "Rotation._info.help"
+    },
+    "CandidateSort": {
+      "name": "Rotation.CandidateSort.name",
+      "help": "Rotation.CandidateSort.help",
+      "level_asc": "level_asc",
+      "level_desc": "level_desc"
+    },
+    "RotateLevel": {
+      "name": "Rotation.RotateLevel.name",
+      "help": "Rotation.RotateLevel.help"
+    },
+    "LevelMin": {
+      "name": "Rotation.LevelMin.name",
+      "help": "Rotation.LevelMin.help"
+    },
+    "EmotionMin": {
+      "name": "Rotation.EmotionMin.name",
+      "help": "Rotation.EmotionMin.help"
+    }
+  },
   "EventGeneral": {
     "_info": {
       "name": "活动通用设置",
@@ -1449,6 +1657,10 @@
     "DoMajorCommission": {
       "name": "做主要委托（1200油/1000油委托）",
       "help": "1200油委托现在已经过时，收益很低，建议关闭"
+    },
+    "CheckAfterSortie": {
+      "name": "Commission.CheckAfterSortie.name",
+      "help": "Commission.CheckAfterSortie.help"
     }
   },
   "Tactical": {

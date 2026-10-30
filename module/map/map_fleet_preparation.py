@@ -287,6 +287,13 @@ class FleetPreparation(InfoHandler):
         if self.map_fleet_checked:
             return False
 
+        # Azdaily fork: fill/rotate farm-fleet slots by faction (FleetScheduler
+        # task config) once per task run, right before battle.
+        from module.fleet_scheduler.scheduler import FleetScheduler
+        plan = FleetScheduler.slot_plan(self.config.data)
+        if plan:
+            FleetScheduler(self.config, device=self.device).apply(plan)
+
         if self.appear(FLEET_1_CLEAR, offset=FleetOperator.OFFSET):
             AUTO_SEARCH_SET_MOB.load_offset(FLEET_1_CLEAR)
             AUTO_SEARCH_SET_BOSS.load_offset(FLEET_1_CLEAR)

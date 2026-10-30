@@ -286,6 +286,52 @@ EquipmentCode:
     mode: yaml
     value: |-
 
+FarmFleet1:
+  Backline1:
+    value: keep
+    option: [ keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
+  Flagship:
+    value: keep
+    option: [ keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
+  Backline3:
+    value: keep
+    option: [ keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
+  Vanguard1:
+    value: keep
+    option: [ keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
+  Vanguard2:
+    value: keep
+    option: [ keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
+  Vanguard3:
+    value: keep
+    option: [ keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
+FarmFleet2:
+  Backline1:
+    value: keep
+    option: [ keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
+  Flagship:
+    value: keep
+    option: [ keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
+  Backline3:
+    value: keep
+    option: [ keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
+  Vanguard1:
+    value: keep
+    option: [ keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
+  Vanguard2:
+    value: keep
+    option: [ keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
+  Vanguard3:
+    value: keep
+    option: [ keep, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
+Rotation:
+  CandidateSort:
+    value: level_asc
+    option: [ level_asc, level_desc ]
+  RotateLevel: 100
+  LevelMin: 1
+  EmotionMin: 0
+
 # ==================== Event ====================
 
 EventGeneral:
