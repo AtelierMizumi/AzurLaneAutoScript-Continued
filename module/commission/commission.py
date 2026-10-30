@@ -467,6 +467,11 @@ class RewardCommission(UI, InfoHandler):
         """
         Scan and Start all chosen commissions.
 
+        Azdaily fork: no tab reset between same-tab starts (the visible
+        urgent-tab flapping after every commission), and a fill pass that
+        re-scans and starts more commissions when slots are still free,
+        so the task always leaves 4/4 running when candidates exist.
+
         Pages:
             in: page_commission
             out: page_commission
@@ -474,6 +479,22 @@ class RewardCommission(UI, InfoHandler):
         self._commission_scan_all()
 
         logger.hr('Commission run', level=1)
+        self._commission_start_chosen()
+
+        # Azdaily fork: fill pass. The choose runs before any start, so a
+        # small filter pool or a failed selection can leave slots empty
+        # while pending commissions exist; re-scan once and fill.
+        running = self._commission_running_count()
+        if running < self.max_commission:
+            logger.info(f'Only {running}/{self.max_commission} commissions running, re-scan to fill')
+            self._commission_scan_all()
+            self._commission_start_chosen()
+
+    def _commission_start_chosen(self):
+        """
+        Start the commissions chosen by the last scan, daily first, then
+        urgent. Stays in the current tab between same-tab starts.
+        """
         if self.daily_choose:
             for comm in self.daily_choose:
                 self._commission_ensure_mode('daily')
@@ -481,7 +502,6 @@ class RewardCommission(UI, InfoHandler):
                 self.handle_info_bar()
                 if self._commission_find_and_start(comm, is_urgent=False):
                     comm.convert_to_running()
-                self._commission_mode_reset()
         if self.urgent_choose:
             for comm in self.urgent_choose:
                 self._commission_ensure_mode('urgent')
@@ -489,9 +509,17 @@ class RewardCommission(UI, InfoHandler):
                 self.handle_info_bar()
                 if self._commission_find_and_start(comm, is_urgent=True):
                     comm.convert_to_running()
-                self._commission_mode_reset()
         if not self.daily_choose and not self.urgent_choose:
             logger.info('No commission chose')
+
+    def _commission_running_count(self):
+        """
+        Returns:
+            int: Running commissions among the last scan results, with
+                the ones started by this task converted.
+        """
+        total = self.daily.add_by_eq(self.urgent)
+        return int(np.sum([1 for c in total if c.status == 'running']))
 
     def _commission_receive(self, skip_first_screenshot=True):
         """
