@@ -94,7 +94,9 @@ class CampaignRun(CampaignEvent):
             return True
         # Oil limit
         if oil_check:
-            if self.get_oil() < max(500, self.config.StopCondition_OilLimit):
+            # Azdaily fork: hard oil floor of 1000 for every oil-consuming mode,
+            # so the gem oil-refill popup can never be reached.
+            if self.get_oil() < max(1000, self.config.StopCondition_OilLimit):
                 logger.hr('Triggered stop condition: Oil limit')
                 self.config.task_delay(minute=(120, 240))
                 return True

@@ -52,7 +52,9 @@ class HospitalCombat(Combat, HospitalUI, CampaignEvent):
 
         @run_once
         def check_oil():
-            if self.get_oil() < max(500, self.config.StopCondition_OilLimit):
+            # Azdaily fork: hard oil floor of 1000 for every oil-consuming mode,
+            # so the gem oil-refill popup can never be reached.
+            if self.get_oil() < max(1000, self.config.StopCondition_OilLimit):
                 logger.hr('Triggered oil limit')
                 raise OilExhausted
 
