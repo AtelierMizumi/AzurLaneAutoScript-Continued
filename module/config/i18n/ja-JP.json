@@ -1555,22 +1555,24 @@
       "help": "Rotation.AlternateState.help"
     }
   },
-  "Dorm": {
+  "DormFill": {
     "_info": {
-      "name": "Dorm._info.name",
-      "help": "Dorm._info.help"
+      "name": "DormFill._info.name",
+      "help": "DormFill._info.help"
     },
-    "Collect": {
-      "name": "Dorm.Collect.name",
-      "help": "Dorm.Collect.help"
+    "Enable": {
+      "name": "DormFill.Enable.name",
+      "help": "DormFill.Enable.help"
     },
-    "Feed": {
-      "name": "Dorm.Feed.name",
-      "help": "Dorm.Feed.help"
+    "Mode": {
+      "name": "DormFill.Mode.name",
+      "help": "DormFill.Mode.help",
+      "rest": "rest",
+      "train": "train"
     },
-    "FeedFilter": {
-      "name": "Dorm.FeedFilter.name",
-      "help": "Dorm.FeedFilter.help"
+    "Fleet": {
+      "name": "DormFill.Fleet.name",
+      "help": "DormFill.Fleet.help"
     }
   },
   "EventGeneral": {
@@ -1864,6 +1866,24 @@
     "CustomFilter": {
       "name": "Research.CustomFilter.name",
       "help": "Research.CustomFilter.help"
+    }
+  },
+  "Dorm": {
+    "_info": {
+      "name": "Dorm._info.name",
+      "help": "Dorm._info.help"
+    },
+    "Collect": {
+      "name": "Dorm.Collect.name",
+      "help": "Dorm.Collect.help"
+    },
+    "Feed": {
+      "name": "Dorm.Feed.name",
+      "help": "Dorm.Feed.help"
+    },
+    "FeedFilter": {
+      "name": "Dorm.FeedFilter.name",
+      "help": "Dorm.FeedFilter.help"
     }
   },
   "BuyFurniture": {

@@ -1555,22 +1555,24 @@
       "help": "Rotation.AlternateState.help"
     }
   },
-  "Dorm": {
+  "DormFill": {
     "_info": {
-      "name": "后宅",
-      "help": ""
+      "name": "DormFill._info.name",
+      "help": "DormFill._info.help"
     },
-    "Collect": {
-      "name": "收集爱心和家具币",
-      "help": ""
+    "Enable": {
+      "name": "DormFill.Enable.name",
+      "help": "DormFill.Enable.help"
     },
-    "Feed": {
-      "name": "喂食",
-      "help": ""
+    "Mode": {
+      "name": "DormFill.Mode.name",
+      "help": "DormFill.Mode.help",
+      "rest": "rest",
+      "train": "train"
     },
-    "FeedFilter": {
-      "name": "喂食过滤器",
-      "help": "一般不需要修改"
+    "Fleet": {
+      "name": "DormFill.Fleet.name",
+      "help": "DormFill.Fleet.help"
     }
   },
   "EventGeneral": {
@@ -1864,6 +1866,24 @@
     "CustomFilter": {
       "name": "自定义科研过滤器",
       "help": "使用自定义过滤器需将 \"科研过滤器\" 设置为 \"自定义\"，并阅读 https://github.com/LmeSzinc/AzurLaneAutoScript/wiki/filter_string_cn"
+    }
+  },
+  "Dorm": {
+    "_info": {
+      "name": "后宅",
+      "help": ""
+    },
+    "Collect": {
+      "name": "收集爱心和家具币",
+      "help": ""
+    },
+    "Feed": {
+      "name": "喂食",
+      "help": ""
+    },
+    "FeedFilter": {
+      "name": "喂食过滤器",
+      "help": "一般不需要修改"
     }
   },
   "BuyFurniture": {

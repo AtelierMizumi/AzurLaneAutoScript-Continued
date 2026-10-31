@@ -245,43 +245,22 @@ class FleetScheduler(DormPlacement, Dock):
 
     # ---------- entries ----------
 
-    def _dorm_factions(self):
-        """
-        Returns:
-            list[str] or None: Factions of the current research target,
-                the dorm growth pool. None when the target is unread/done.
-        """
-        state = self.research_state(self.config.data)
-        if state is None:
-            return None
-        return state['factions']
-
     def before_stage(self):
         """
         Called once per campaign task run, from CampaignRun.run(), before
-        entering any map. Fills empty dorm slots (optional), refreshes the
-        research target cache and, for main chapters, arranges farm fleets
-        on the formation screen.
+        entering any map. Refreshes the research target cache, syncs the
+        dorm selection (optional) and, for main chapters, arranges farm
+        fleets on the formation screen.
 
         Main chapters address farm fleets by MainNumber (0 disables the
         group there), event stages by Number.
         """
-        if deep_get(self.config.data, keys='FleetScheduler.DormFill.Enable', default=False):
-            try:
-                self.ui_ensure(page_dorm)
-                self.dorm_fill(
-                    mode=deep_get(self.config.data, keys='FleetScheduler.DormFill.Mode', default='rest'),
-                    factions=self._dorm_factions(),
-                    level_max=self._rotation_args()[0] or 125)
-            except Exception as e:
-                logger.warning(f'FleetScheduler: dorm fill failed: {e}')
-
         folder = getattr(self.config, 'Campaign_Event', '')
         number_arg = 'MainNumber' if folder == 'campaign_main' else 'Number'
         fleets = self.farm_fleets(self.config.data, number_arg=number_arg)
-        if not fleets:
-            return False
-        logger.hr('Fleet scheduler', level=1)
+
+        # Refresh the research target first: the slot resolution consumes
+        # it, and an intervening config update strips the hidden state.
         if self._has_research_slot(self.config.data):
             try:
                 from module.fleet_scheduler.research import read_research_state
@@ -289,6 +268,22 @@ class FleetScheduler(DormPlacement, Dock):
             except Exception as e:
                 logger.warning(f'FleetScheduler: failed to read research state: {e}')
                 self.config.cross_set('FleetScheduler.Rotation.ResearchState', '')
+
+        if deep_get(self.config.data, keys='FleetScheduler.DormFill.Enable', default=False):
+            try:
+                fleet = int(deep_get(self.config.data, keys='FleetScheduler.DormFill.Fleet', default=0) or 0)
+                if fleet <= 0 and fleets:
+                    fleet = fleets[0]['number']
+                self.ui_ensure(page_dorm)
+                self.dorm_fill(
+                    mode=deep_get(self.config.data, keys='FleetScheduler.DormFill.Mode', default='rest'),
+                    fleet=fleet)
+            except Exception as e:
+                logger.warning(f'FleetScheduler: dorm fill failed: {e}')
+
+        if not fleets:
+            return False
+        logger.hr('Fleet scheduler', level=1)
         if folder == 'campaign_main':
             fleets = self._alternate_order(fleets)
             return self.assign_on_formation(fleets)

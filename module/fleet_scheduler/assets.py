@@ -49,6 +49,14 @@ DORM_SLOT_2 = Button(area={'cn': (305, 205, 465, 640), 'en': (305, 205, 465, 640
 DORM_SLOT_3 = Button(area={'cn': (480, 205, 640, 640), 'en': (480, 205, 640, 640), 'jp': (480, 205, 640, 640), 'tw': (480, 205, 640, 640)}, color={'cn': (146, 108, 112), 'en': (146, 108, 112), 'jp': (146, 108, 112), 'tw': (146, 108, 112)}, button={'cn': (480, 205, 640, 640), 'en': (480, 205, 640, 640), 'jp': (480, 205, 640, 640), 'tw': (480, 205, 640, 640)}, file=None, name='DORM_SLOT_3')
 DORM_SLOT_4 = Button(area={'cn': (650, 205, 810, 640), 'en': (650, 205, 810, 640), 'jp': (650, 205, 810, 640), 'tw': (650, 205, 810, 640)}, color={'cn': (150, 132, 168), 'en': (150, 132, 168), 'jp': (150, 132, 168), 'tw': (150, 132, 168)}, button={'cn': (650, 205, 810, 640), 'en': (650, 205, 810, 640), 'jp': (650, 205, 810, 640), 'tw': (650, 205, 810, 640)}, file=None, name='DORM_SLOT_4')
 DORM_SLOT_5 = Button(area={'cn': (825, 205, 985, 640), 'en': (825, 205, 985, 640), 'jp': (825, 205, 985, 640), 'tw': (825, 205, 985, 640)}, color={'cn': (221, 221, 221), 'en': (221, 221, 221), 'jp': (221, 221, 221), 'tw': (221, 221, 221)}, button={'cn': (825, 205, 985, 640), 'en': (825, 205, 985, 640), 'jp': (825, 205, 985, 640), 'tw': (825, 205, 985, 640)}, file=None, name='DORM_SLOT_5')
+# Floor switcher (top right swap icon) and the per-slot "Lv.###" OCR
+# areas of the slot cards (slot 6 = the possibly locked one).
+DORM_FLOOR_SWAP = Button(area={'cn': (1215, 25, 1260, 65), 'en': (1215, 25, 1260, 65), 'jp': (1215, 25, 1260, 65), 'tw': (1215, 25, 1260, 65)}, color={'cn': (240, 240, 240), 'en': (240, 240, 240), 'jp': (240, 240, 240), 'tw': (240, 240, 240)}, button={'cn': (1215, 25, 1260, 65), 'en': (1215, 25, 1260, 65), 'jp': (1215, 25, 1260, 65), 'tw': (1215, 25, 1260, 65)}, file=None, name='DORM_FLOOR_SWAP')
+DORM_SLOT_LV_AREAS = [
+    (x0 + 118, 206, x0 + 162, 238)
+    for x0 in (130, 305, 480, 650, 825, 1000)
+]
+
 # Screen check for the dorm slot dialog: the X close button, present on
 # both tabs and absent on the placement picker / dock.
 DORM_CHECK = Button(area={'cn': (1112, 78, 1162, 122), 'en': (1112, 78, 1162, 122), 'jp': (1112, 78, 1162, 122), 'tw': (1112, 78, 1162, 122)}, color={'cn': (66, 66, 66), 'en': (66, 66, 66), 'jp': (66, 66, 66), 'tw': (66, 66, 66)}, button={'cn': (1112, 78, 1162, 122), 'en': (1112, 78, 1162, 122), 'jp': (1112, 78, 1162, 122), 'tw': (1112, 78, 1162, 122)}, file={'cn': './assets/en/fleet_scheduler/DORM_CHECK.png', 'en': './assets/en/fleet_scheduler/DORM_CHECK.png', 'jp': './assets/en/fleet_scheduler/DORM_CHECK.png', 'tw': './assets/en/fleet_scheduler/DORM_CHECK.png'}, name='DORM_CHECK')

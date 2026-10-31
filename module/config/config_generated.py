@@ -193,6 +193,7 @@ class GeneratedConfig:
     # Group `DormFill`
     DormFill_Enable = False
     DormFill_Mode = 'rest'  # rest, train
+    DormFill_Fleet = 0
 
     # Group `EventGeneral`
     EventGeneral_PtLimit = 0

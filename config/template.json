@@ -406,7 +406,8 @@
     },
     "DormFill": {
       "Enable": false,
-      "Mode": "rest"
+      "Mode": "rest",
+      "Fleet": 0
     },
     "Storage": {
       "Storage": {}

@@ -341,12 +341,12 @@ Rotation:
   ResearchSeries: 9
   ResearchShipIndex: 4
   ResearchState:
-    type: textarea
+    type: stored
     display: hide
     value: ''
   AlternateFleets: false
   AlternateState:
-    type: textarea
+    type: stored
     display: hide
     value: ''
 DormFill:
@@ -354,6 +354,7 @@ DormFill:
   Mode:
     value: rest
     option: [ rest, train ]
+  Fleet: 0
 
 # ==================== Event ====================
 

@@ -1569,6 +1569,10 @@
       "help": "Which dorm tab to fill. `rest` recovers morale, `train` grants EXP over time.",
       "rest": "rest",
       "train": "train"
+    },
+    "Fleet": {
+      "name": "Fleet To Rest",
+      "help": "The dorm selection is synced to this fleet's six members: unplaced members are added and non-member occupants are evicted. 0 = the first configured farm fleet (FarmFleet1/2 Number, or MainNumber on main chapters)."
     }
   },
   "EventGeneral": {
