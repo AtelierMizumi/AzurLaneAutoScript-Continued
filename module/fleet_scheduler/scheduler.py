@@ -470,6 +470,9 @@ class FleetScheduler(Dock):
         rotate_level, level_min, emotion_min, descending = self._rotation_args()
         level_max = rotate_level if rotate_level > 0 else 125
 
+        # The drop-up menu overlaps the backline-1 platform; a menu left
+        # open would turn the platform click into a fleet switch.
+        self._fleet_menu_ensure_closed()
         logger.info(f'FleetScheduler: fleet {fleet_number} {arg}, '
                     f'factions {factions}, row {row}')
         if not self._enter_slot_dock(hotspot, timeout=15):

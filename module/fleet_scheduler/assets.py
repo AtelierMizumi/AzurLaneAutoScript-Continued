@@ -19,9 +19,10 @@ FLEET_2_VANGUARD_2 = Button(area={'cn': (830, 309, 872, 351), 'en': (830, 309, 8
 # (top row) to 1 (bottom row) inside FLEET_MENU_BAR. Hand-derived from a
 # live EN screenshot (1280x720, 2026-10-31), click-only anchors (file=None).
 # Menu-open detection counts the orange current-fleet highlight inside
-# FLEET_MENU_BAR, see scheduler.py.
+# FLEET_MENU_BAR, see scheduler.py. The bar stops at x=310 so it never
+# overlaps the FLEET_FORMATION_BACKLINE_1 platform anchor (315+).
 FLEET_MENU_OPEN = Button(area={'cn': (25, 645, 355, 705), 'en': (25, 645, 355, 705), 'jp': (25, 645, 355, 705), 'tw': (25, 645, 355, 705)}, color={'cn': (84, 106, 144), 'en': (84, 106, 144), 'jp': (84, 106, 144), 'tw': (84, 106, 144)}, button={'cn': (25, 645, 355, 705), 'en': (25, 645, 355, 705), 'jp': (25, 645, 355, 705), 'tw': (25, 645, 355, 705)}, file=None, name='FLEET_MENU_OPEN')
-FLEET_MENU_BAR = Button(area={'cn': (150, 310, 360, 640), 'en': (150, 310, 360, 640), 'jp': (150, 310, 360, 640), 'tw': (150, 310, 360, 640)}, color={'cn': (52, 72, 102), 'en': (52, 72, 102), 'jp': (52, 72, 102), 'tw': (52, 72, 102)}, button={'cn': (150, 310, 360, 640), 'en': (150, 310, 360, 640), 'jp': (150, 310, 360, 640), 'tw': (150, 310, 360, 640)}, file=None, name='FLEET_MENU_BAR')
+FLEET_MENU_BAR = Button(area={'cn': (150, 310, 310, 640), 'en': (150, 310, 310, 640), 'jp': (150, 310, 310, 640), 'tw': (150, 310, 310, 640)}, color={'cn': (52, 72, 102), 'en': (52, 72, 102), 'jp': (52, 72, 102), 'tw': (52, 72, 102)}, button={'cn': (150, 310, 310, 640), 'en': (150, 310, 310, 640), 'jp': (150, 310, 310, 640), 'tw': (150, 310, 310, 640)}, file=None, name='FLEET_MENU_BAR')
 
 # Formation screen (page_fleet) platform anchors for the four slots that
 # upstream has no button for. Tapping the ship standing on a platform opens
