@@ -349,6 +349,11 @@ Rotation:
     type: textarea
     display: hide
     value: ''
+Dorm:
+  Enable: false
+  Mode:
+    value: rest
+    option: [ rest, train ]
 
 # ==================== Event ====================
 

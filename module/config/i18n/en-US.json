@@ -1555,6 +1555,24 @@
       "help": "The farm fleet group arranged first last time, managed automatically."
     }
   },
+  "Dorm": {
+    "_info": {
+      "name": "Dorm Settings",
+      "help": ""
+    },
+    "Collect": {
+      "name": "Collect Coins and Loves",
+      "help": ""
+    },
+    "Feed": {
+      "name": "Restock Dorm Snacks",
+      "help": ""
+    },
+    "FeedFilter": {
+      "name": "Snack Filter",
+      "help": "Generally does not need to be modified or re-arranged but can do so if desired"
+    }
+  },
   "EventGeneral": {
     "_info": {
       "name": "Event General Settings",
@@ -1846,24 +1864,6 @@
     "CustomFilter": {
       "name": "Custom Research Priority",
       "help": "To use your own filter, set \"Preset Filter Select\" to \"custom\". All options have been defined at  <https://github.com/LmeSzinc/AzurLaneAutoScript/wiki/filter_string_en>"
-    }
-  },
-  "Dorm": {
-    "_info": {
-      "name": "Dorm Settings",
-      "help": ""
-    },
-    "Collect": {
-      "name": "Collect Coins and Loves",
-      "help": ""
-    },
-    "Feed": {
-      "name": "Restock Dorm Snacks",
-      "help": ""
-    },
-    "FeedFilter": {
-      "name": "Snack Filter",
-      "help": "Generally does not need to be modified or re-arranged but can do so if desired"
     }
   },
   "BuyFurniture": {

@@ -2261,6 +2261,20 @@
         "display": "hide"
       }
     },
+    "Dorm": {
+      "Collect": {
+        "type": "checkbox",
+        "value": true
+      },
+      "Feed": {
+        "type": "checkbox",
+        "value": true
+      },
+      "FeedFilter": {
+        "type": "textarea",
+        "value": "20000 > 10000 > 5000 > 3000 > 2000 > 1000"
+      }
+    },
     "Storage": {
       "Storage": {
         "type": "storage",

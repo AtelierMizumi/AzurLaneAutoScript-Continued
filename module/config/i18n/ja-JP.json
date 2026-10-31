@@ -1555,6 +1555,24 @@
       "help": "Rotation.AlternateState.help"
     }
   },
+  "Dorm": {
+    "_info": {
+      "name": "Dorm._info.name",
+      "help": "Dorm._info.help"
+    },
+    "Collect": {
+      "name": "Dorm.Collect.name",
+      "help": "Dorm.Collect.help"
+    },
+    "Feed": {
+      "name": "Dorm.Feed.name",
+      "help": "Dorm.Feed.help"
+    },
+    "FeedFilter": {
+      "name": "Dorm.FeedFilter.name",
+      "help": "Dorm.FeedFilter.help"
+    }
+  },
   "EventGeneral": {
     "_info": {
       "name": "EventGeneral._info.name",
@@ -1846,24 +1864,6 @@
     "CustomFilter": {
       "name": "Research.CustomFilter.name",
       "help": "Research.CustomFilter.help"
-    }
-  },
-  "Dorm": {
-    "_info": {
-      "name": "Dorm._info.name",
-      "help": "Dorm._info.help"
-    },
-    "Collect": {
-      "name": "Dorm.Collect.name",
-      "help": "Dorm.Collect.help"
-    },
-    "Feed": {
-      "name": "Dorm.Feed.name",
-      "help": "Dorm.Feed.help"
-    },
-    "FeedFilter": {
-      "name": "Dorm.FeedFilter.name",
-      "help": "Dorm.FeedFilter.help"
     }
   },
   "BuyFurniture": {
