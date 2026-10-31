@@ -288,6 +288,7 @@ EquipmentCode:
 
 FarmFleet1:
   Number: 5
+  MainNumber: 0
   Backline1:
     value: keep
     option: [ keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
@@ -308,6 +309,7 @@ FarmFleet1:
     option: [ keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
 FarmFleet2:
   Number: 6
+  MainNumber: 0
   Backline1:
     value: keep
     option: [ keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon ]
@@ -339,6 +341,11 @@ Rotation:
   ResearchSeries: 9
   ResearchShipIndex: 4
   ResearchState:
+    type: textarea
+    display: hide
+    value: ''
+  AlternateFleets: false
+  AlternateState:
     type: textarea
     display: hide
     value: ''

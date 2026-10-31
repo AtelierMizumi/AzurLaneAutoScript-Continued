@@ -1990,6 +1990,10 @@
         "type": "input",
         "value": 5
       },
+      "MainNumber": {
+        "type": "input",
+        "value": 0
+      },
       "Backline1": {
         "type": "select",
         "value": "keep",
@@ -2097,6 +2101,10 @@
       "Number": {
         "type": "input",
         "value": 6
+      },
+      "MainNumber": {
+        "type": "input",
+        "value": 0
       },
       "Backline1": {
         "type": "select",
@@ -2239,6 +2247,15 @@
         "value": 4
       },
       "ResearchState": {
+        "type": "textarea",
+        "value": "",
+        "display": "hide"
+      },
+      "AlternateFleets": {
+        "type": "checkbox",
+        "value": false
+      },
+      "AlternateState": {
         "type": "textarea",
         "value": "",
         "display": "hide"

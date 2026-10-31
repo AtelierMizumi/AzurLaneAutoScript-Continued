@@ -1,4 +1,5 @@
 import json
+from collections import namedtuple
 
 import numpy as np
 
@@ -13,8 +14,8 @@ from module.fleet_scheduler import assets as fleet_assets
 from module.logger import logger
 from module.map.assets import FLEET_PREPARATION
 from module.ocr.ocr import Digit
-from module.retire.assets import DOCK_CHECK
-from module.retire.dock import Dock
+from module.retire.assets import DOCK_CHECK, DOCK_EMPTY
+from module.retire.dock import DOCK_SCROLL, Dock
 from module.retire.scanner import ShipScanner
 from module.ui.page import page_fleet
 
@@ -25,6 +26,49 @@ FLEET_INDEX = Digit(OCR_FLEET_INDEX, letter=(90, 154, 255), threshold=128, alpha
 
 class FleetSchedulerError(Exception):
     pass
+
+
+# One surveyed dock ship: the scanned Ship plus where it was seen. Ship
+# buttons go stale once the dock scrolls, page/index identify the record
+# for scrolling back before the click.
+DockShipRecord = namedtuple('DockShipRecord', ['ship', 'page', 'index'])
+
+
+def pick_candidate_record(records, descending):
+    """
+    Args:
+        records (list[DockShipRecord]): Records of fleet-badge-0 ships.
+        descending (bool): CandidateSort direction, applied in Python
+            regardless of the dock sort order used for the survey.
+
+    Returns:
+        DockShipRecord:
+    """
+    if descending:
+        return max(records, key=lambda r: (r.ship.level, r.ship.emotion))
+    return min(records, key=lambda r: (r.ship.level, -r.ship.emotion))
+
+
+def match_record(ships, record):
+    """
+    Match a surveyed record against a fresh scan of the same page.
+
+    Args:
+        ships (list[Ship]): Fresh scan results of that page.
+        record (DockShipRecord):
+
+    Returns:
+        Ship or None: Fresh ship with a clickable button, None when the
+            recorded ship can no longer be matched (page misaligned or
+            content changed).
+    """
+    if record.index >= len(ships):
+        return None
+    candidate = ships[record.index]
+    if (candidate.level, candidate.emotion, candidate.rarity, candidate.fleet) \
+            == (record.ship.level, record.ship.emotion, record.ship.rarity, record.ship.fleet):
+        return candidate
+    return None
 
 
 def _slot_button(fleet_index, suffix):
@@ -89,24 +133,32 @@ class FleetScheduler(Dock):
     # (same trick as FleetOperator.in_use, looser bound).
     EMPTY_SLOT_STD = 12
 
+    # Dock survey: stop after this many page turns; one page is two card
+    # rows (CARD_GRIDS delta_y * 2).
+    DOCK_SCAN_SWIPE_LIMIT = 8
+    DOCK_PAGE_DELTA_Y = 454
+
     # ---------- config reading ----------
 
     @classmethod
-    def farm_fleets(cls, config_data):
+    def farm_fleets(cls, config_data, number_arg='Number'):
         """
         Read the configured farm fleets.
 
         Args:
             config_data (dict): Full config JSON, e.g. self.config.data.
+            number_arg (str): 'Number' for event stages (all six slots on
+                the select-fleet popup), 'MainNumber' for main chapters
+                (formation screen, flagship and vanguard lead only).
 
         Returns:
             list[dict]: [{'group': 1, 'number': 5, 'slots': {arg: value}}, ...]
-                Groups with Number=0 or no non-keep slot are omitted.
+                Groups with the number arg <= 0 or no non-keep slot are omitted.
         """
         fleets = []
         for group in (1, 2):
             number = int(deep_get(
-                config_data, keys=f'FleetScheduler.FarmFleet{group}.Number', default=0) or 0)
+                config_data, keys=f'FleetScheduler.FarmFleet{group}.{number_arg}', default=0) or 0)
             if number <= 0:
                 continue
             slots = {}
@@ -140,8 +192,35 @@ class FleetScheduler(Dock):
 
     @classmethod
     def _has_research_slot(cls, config_data):
-        return any(value == 'research' for fleet in cls.farm_fleets(config_data)
+        return any(value == 'research'
+                   for number_arg in ('Number', 'MainNumber')
+                   for fleet in cls.farm_fleets(config_data, number_arg=number_arg)
                    for value in fleet['slots'].values())
+
+    def _alternate_order(self, fleets):
+        """
+        Rotate which farm fleet group is arranged first, so both groups
+        pick candidates evenly. Persists the group arranged first into
+        Rotation.AlternateState (same pattern as ResearchState).
+
+        Args:
+            fleets (list[dict]): See farm_fleets().
+
+        Returns:
+            list[dict]: Fleets reordered, or as-is when disabled or only
+                one group configured.
+        """
+        if len(fleets) < 2 or not deep_get(
+                self.config.data, keys='FleetScheduler.Rotation.AlternateFleets', default=False):
+            return fleets
+        last = deep_get(self.config.data, keys='FleetScheduler.Rotation.AlternateState', default='') or 0
+        try:
+            first = 2 if int(last) == 1 else 1
+        except (TypeError, ValueError):
+            first = 1
+        self.config.cross_set('FleetScheduler.Rotation.AlternateState', str(first))
+        logger.info(f'FleetScheduler: alternate fleets, group {first} goes first')
+        return sorted(fleets, key=lambda f: 0 if f['group'] == first else 1)
 
     def _rotation_args(self):
         rotate_level = int(deep_get(self.config.data, keys='FleetScheduler.Rotation.RotateLevel', default=100) or 0)
@@ -158,8 +237,13 @@ class FleetScheduler(Dock):
         Called once per campaign task run, from CampaignRun.run(), before
         entering any map. Refreshes the research target cache and, for
         main chapters, arranges farm fleets on the formation screen.
+
+        Main chapters address farm fleets by MainNumber (0 disables the
+        group there), event stages by Number.
         """
-        fleets = self.farm_fleets(self.config.data)
+        folder = getattr(self.config, 'Campaign_Event', '')
+        number_arg = 'MainNumber' if folder == 'campaign_main' else 'Number'
+        fleets = self.farm_fleets(self.config.data, number_arg=number_arg)
         if not fleets:
             return False
         logger.hr('Fleet scheduler', level=1)
@@ -170,8 +254,8 @@ class FleetScheduler(Dock):
             except Exception as e:
                 logger.warning(f'FleetScheduler: failed to read research state: {e}')
                 self.config.cross_set('FleetScheduler.Rotation.ResearchState', '')
-        folder = getattr(self.config, 'Campaign_Event', '')
         if folder == 'campaign_main':
+            fleets = self._alternate_order(fleets)
             return self.assign_on_formation(fleets)
         return False
 
@@ -402,17 +486,83 @@ class FleetScheduler(Dock):
         logger.warning(f'Failed to open dock from {button}')
         return False
 
+    def _dock_survey(self, scanner):
+        """
+        Scan the filtered dock page by page, top to bottom.
+
+        The dock must be sorted descending by level (caller's job) so the
+        interesting level band surfaces on the first pages. Cards are
+        OCR-ed with the same scanner instance; grids shift one viewport
+        after every confirmed page turn.
+
+        Args:
+            scanner (ShipScanner):
+
+        Returns:
+            tuple[list[DockShipRecord], list[Ship], int, list[float]]:
+                records of every matching ship, ships of the last scan
+                (buttons still valid), amount of pages scanned, scroll
+                position of each scanned page.
+        """
+        records = []
+        last_page_ships = []
+        positions = []
+        page = 0
+        swipe_count = 0
+        disappear_confirm = Timer(2, count=6)
+        while 1:
+            self.device.screenshot()
+            if self.appear(DOCK_EMPTY):
+                logger.info('Dock empty, survey finished')
+                break
+            if not DOCK_SCROLL.appear(main=self):
+                disappear_confirm.start()
+                if disappear_confirm.reached():
+                    logger.info('Dock scroll bar not found, survey finished')
+                    break
+                continue
+            disappear_confirm.clear()
+            self.handle_dock_cards_loading()
+            ships = scanner.scan(self.device.image, output=False)
+            last_page_ships = ships
+            for index, ship in enumerate(ships):
+                records.append(DockShipRecord(ship=ship, page=page, index=index))
+            positions.append(DOCK_SCROLL.cal_position(main=self))
+
+            if DOCK_SCROLL.at_bottom(main=self):
+                logger.attr('Dock survey', f'{page + 1} page(s), bottom reached')
+                break
+            if swipe_count >= self.DOCK_SCAN_SWIPE_LIMIT:
+                logger.warning(
+                    f'Dock survey stopped after {swipe_count} swipes, results may be partial')
+                break
+            previous = positions[-1]
+            DOCK_SCROLL.next_page(main=self, page=1.0, random_range=(0, 0))
+            if abs(DOCK_SCROLL.cal_position(main=self) - previous) < 0.02:
+                logger.info('Dock page did not move, survey finished')
+                break
+            swipe_count += 1
+            page += 1
+            scanner.move((0, -self.DOCK_PAGE_DELTA_Y))
+        return records, last_page_ships, page + 1, positions
+
     def _dock_assign(self, arg, row, factions, fleet_number, rotate_level,
                      level_min, level_max, emotion_min, descending,
                      check_button, empty=None):
         """
-        Shared dock flow: filter, scan, decide, select. The dock must be
-        open on entry; on return the caller is back on `check_button`.
+        Shared dock flow: filter, survey every page, decide, select. The
+        dock must be open on entry; on return the caller is back on
+        `check_button`.
 
         Args:
             empty (bool or None): Slot emptiness when known (event
                 preparation screen), None when unknown (formation screen,
                 assume occupied).
+
+        The dock is always sorted descending by level for the survey so
+        the level band (level_min..level_max) surfaces on the first
+        pages; `descending` (CandidateSort) only decides how the pick is
+        made in Python.
 
         Rotation rule: with lowest-level-first assignment, the occupant of
         a farm slot is the lowest level ship of its faction and row, so
@@ -422,16 +572,17 @@ class FleetScheduler(Dock):
         """
         occupied = True if empty is None else (not empty)
         self.dock_favourite_set(False, wait_loading=False)
-        self.dock_sort_method_dsc_set(descending, wait_loading=False)
+        self.dock_sort_method_dsc_set(True, wait_loading=False)
         self.dock_filter_set(sort='level', index=row, faction=factions, extra='not_level_max')
 
         # fleet=None: keep fleet badges in the results so ships already in
         # fleets can be told apart from candidates (badge 0).
-        scanner = ShipScanner(
+        scanner_kwargs = dict(
             level=(level_min, level_max), emotion=(emotion_min, 150), fleet=None, status='free')
-        ships = scanner.scan(self.device.image, output=False)
-        candidates = [ship for ship in ships if ship.fleet == 0]
-        in_farm = [ship for ship in ships if ship.fleet == fleet_number]
+        scanner = ShipScanner(**scanner_kwargs)
+        records, last_page_ships, pages, positions = self._dock_survey(scanner)
+        candidates = [record for record in records if record.ship.fleet == 0]
+        in_farm = [record.ship for record in records if record.ship.fleet == fleet_number]
 
         if occupied and in_farm \
                 and (rotate_level <= 0 or min(ship.level for ship in in_farm) < rotate_level):
@@ -449,12 +600,29 @@ class FleetScheduler(Dock):
             self.dock_quit()
             return False
 
-        if descending:
-            ship = max(candidates, key=lambda s: (s.level, s.emotion))
+        record = pick_candidate_record(candidates, descending)
+        ship = record.ship
+        logger.info(f'Select candidate: level {ship.level}, emotion {ship.emotion}, '
+                    f'rarity {ship.rarity}, page {record.page + 1}/{pages}')
+
+        if record.page == pages - 1:
+            target = record.ship
         else:
-            ship = min(candidates, key=lambda s: (s.level, -s.emotion))
-        logger.info(f'Select candidate: level {ship.level}, emotion {ship.emotion}, rarity {ship.rarity}')
-        self.dock_select_one(ship.button)
+            # Buttons of earlier pages are stale after scrolling; scroll
+            # back to the recorded position and re-scan for a fresh click.
+            logger.info(f'Scroll back to page {record.page + 1} for the candidate')
+            DOCK_SCROLL.set(positions[record.page], main=self, random_range=(0, 0))
+            self.device.screenshot()
+            self.handle_dock_cards_loading()
+            fresh = ShipScanner(**scanner_kwargs)
+            target = match_record(fresh.scan(self.device.image, output=False), record)
+        if target is None:
+            logger.warning('FleetScheduler: candidate is no longer visible after scrolling, skip')
+            self.dock_reset()
+            self.dock_quit()
+            return False
+
+        self.dock_select_one(target.button)
         self.dock_reset()
         self.dock_select_confirm(check_button=check_button)
         logger.info(f'Assign slot {arg} of fleet {fleet_number} success')

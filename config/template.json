@@ -374,6 +374,7 @@
   "FleetScheduler": {
     "FarmFleet1": {
       "Number": 5,
+      "MainNumber": 0,
       "Backline1": "keep",
       "Flagship": "keep",
       "Backline3": "keep",
@@ -383,6 +384,7 @@
     },
     "FarmFleet2": {
       "Number": 6,
+      "MainNumber": 0,
       "Backline1": "keep",
       "Flagship": "keep",
       "Backline3": "keep",
@@ -398,7 +400,9 @@
       "ResearchKind": "pr",
       "ResearchSeries": 9,
       "ResearchShipIndex": 4,
-      "ResearchState": null
+      "ResearchState": null,
+      "AlternateFleets": false,
+      "AlternateState": null
     },
     "Storage": {
       "Storage": {}

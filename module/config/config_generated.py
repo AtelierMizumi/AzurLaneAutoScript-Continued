@@ -160,6 +160,7 @@ class GeneratedConfig:
 
     # Group `FarmFleet1`
     FarmFleet1_Number = 5
+    FarmFleet1_MainNumber = 0
     FarmFleet1_Backline1 = 'keep'  # keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon
     FarmFleet1_Flagship = 'keep'  # keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon
     FarmFleet1_Backline3 = 'keep'  # keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon
@@ -169,6 +170,7 @@ class GeneratedConfig:
 
     # Group `FarmFleet2`
     FarmFleet2_Number = 6
+    FarmFleet2_MainNumber = 0
     FarmFleet2_Backline1 = 'keep'  # keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon
     FarmFleet2_Flagship = 'keep'  # keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon
     FarmFleet2_Backline3 = 'keep'  # keep, research, eagle, royal, sakura, iron, sardegna, northern, iris, vichya, dragon
@@ -185,6 +187,8 @@ class GeneratedConfig:
     Rotation_ResearchSeries = 9
     Rotation_ResearchShipIndex = 4
     Rotation_ResearchState = None
+    Rotation_AlternateFleets = False
+    Rotation_AlternateState = None
 
     # Group `EventGeneral`
     EventGeneral_PtLimit = 0
