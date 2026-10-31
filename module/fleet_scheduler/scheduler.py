@@ -16,7 +16,7 @@ from module.logger import logger
 from module.map.assets import FLEET_PREPARATION
 from module.ocr.ocr import Digit
 from module.retire.assets import DOCK_CHECK, DOCK_EMPTY
-from module.retire.dock import DOCK_SCROLL, Dock
+from module.retire.dock import Dock
 from module.retire.scanner import ShipScanner
 from module.ui.page import page_fleet
 
@@ -140,10 +140,15 @@ class FleetScheduler(Dock):
     # (same trick as FleetOperator.in_use, looser bound).
     EMPTY_SLOT_STD = 12
 
-    # Dock survey: stop after this many page turns; one page is two card
-    # rows (CARD_GRIDS delta_y * 2).
-    DOCK_SCAN_SWIPE_LIMIT = 8
-    DOCK_PAGE_DELTA_Y = 454
+    # Dock survey: touch-drag the card grid itself instead of the scroll
+    # bar — the bar's thumb-to-content mapping depends on the ship count,
+    # a fixed pixel drag does not. One step drags exactly one card row
+    # (CARD_GRIDS delta_y) and the overlap (new top row == previous bottom
+    # row) verifies the alignment; a step that stops moving is the bottom.
+    DOCK_ROW_HEIGHT = 227
+    DOCK_ROW_STEPS_LIMIT = 16
+    DOCK_GRID_DRAG_UP = ((640, 400), (640, 400 - 227))
+    DOCK_GRID_DRAG_DOWN = ((640, 250), (640, 250 + 454))
 
     # ---------- config reading ----------
 
@@ -550,75 +555,122 @@ class FleetScheduler(Dock):
         logger.warning(f'Failed to open dock from {button}')
         return False
 
+    @staticmethod
+    def _dock_signature(ships):
+        """
+        Args:
+            ships (list[Ship]): One scan of the card grid, grid order.
+
+        Returns:
+            list[tuple]: Identity of every card, for comparing two views.
+        """
+        return [(s.level, s.emotion, s.rarity, s.fleet) for s in ships]
+
+    def _dock_scan_view(self, scanner):
+        self.device.screenshot()
+        # _scan returns all 14 cards in grid order (no limitation filter),
+        # so row-based overlap checks see empty cells as well.
+        return scanner._scan(self.device.image)
+
     def _dock_survey(self, scanner):
         """
-        Scan the filtered dock page by page, top to bottom.
+        Scan the filtered dock row by row, top to bottom, touch-dragging
+        the card grid itself. The dock must be sorted descending by level
+        (caller's job) so the interesting level band surfaces on the first
+        rows.
 
-        The dock must be sorted descending by level (caller's job) so the
-        interesting level band surfaces on the first pages. Cards are
-        OCR-ed with the same scanner instance; grids shift one viewport
-        after every confirmed page turn.
+        Each step drags exactly one card row and verifies the overlap: the
+        new top row must be the previous bottom row. A step whose view
+        stops moving is the bottom; a step whose overlap breaks clamped at
+        the bottom edge — the tail row below the last aligned view is
+        skipped (its ships are missed, never misread).
 
         Args:
             scanner (ShipScanner):
 
         Returns:
-            tuple[list[DockShipRecord], list[Ship], int, list[float]]:
-                records of every matching ship, ships of the last scan
-                (buttons still valid), amount of pages scanned, scroll
-                position of each scanned page.
+            tuple[list[DockShipRecord], list[Ship], int]:
+                records of every matching ship, filtered ships of the last
+                aligned scan (buttons still valid), amount of pages scanned
+                (one page = one card row step).
         """
         records = []
         last_page_ships = []
-        positions = []
         page = 0
-        swipe_count = 0
-        scanned = False
-        disappear_confirm = Timer(2, count=6)
+        steps = 0
+        self.device.screenshot()
+        self.handle_dock_cards_loading()
+        raw_previous = self._dock_scan_view(scanner)
+        ships = [s for s in raw_previous if s.satisfy_limitation(scanner.limitaion)]
+        last_page_ships = ships
+        for index, ship in enumerate(ships):
+            records.append(DockShipRecord(ship=ship, page=page, index=index))
         while 1:
-            self.device.screenshot()
             if self.appear(DOCK_EMPTY):
                 logger.info('Dock empty, survey finished')
                 break
-            self.handle_dock_cards_loading()
-            if not scanned:
-                # Scan the current view once; re-iterations while waiting
-                # for the scroll bar must not duplicate the records.
-                ships = scanner.scan(self.device.image, output=False)
-                last_page_ships = ships
-                for index, ship in enumerate(ships):
-                    records.append(DockShipRecord(ship=ship, page=page, index=index))
-                scanned = True
-
-            if not DOCK_SCROLL.appear(main=self):
-                disappear_confirm.start()
-                if disappear_confirm.reached():
-                    logger.info('Dock scroll bar not found, survey finished')
-                    break
-                continue
-            disappear_confirm.clear()
-            # The bar can flicker mid-animation; fall back to 0.0 so page
-            # indexes stay aligned for relocation.
-            positions.append(
-                DOCK_SCROLL.cal_position(main=self) if DOCK_SCROLL.appear(main=self) else 0.0)
-
-            if DOCK_SCROLL.at_bottom(main=self):
+            if steps >= self.DOCK_ROW_STEPS_LIMIT:
+                logger.warning(
+                    f'Dock survey stopped after {steps} row drags, results may be partial')
+                break
+            p1, p2 = self.DOCK_GRID_DRAG_UP
+            self.device.drag(p1, p2, point_random=(0, 0, 0, 0), hold_duration=0.15,
+                             name='DOCK_GRID_DRAG')
+            steps += 1
+            raw = self._dock_scan_view(scanner)
+            if self._dock_signature(raw) == self._dock_signature(raw_previous):
                 logger.attr('Dock survey', f'{page + 1} page(s), bottom reached')
                 break
-            if swipe_count >= self.DOCK_SCAN_SWIPE_LIMIT:
-                logger.warning(
-                    f'Dock survey stopped after {swipe_count} swipes, results may be partial')
+            if [(s.level, s.emotion) for s in raw[:7]] \
+                    != [(s.level, s.emotion) for s in raw_previous[7:14]]:
+                logger.warning('Dock grid misaligned after a drag (clamped tail), '
+                               'survey finished at the last aligned page')
                 break
-            previous = positions[-1]
-            DOCK_SCROLL.next_page(main=self, page=1.0, random_range=(0, 0))
-            if abs(DOCK_SCROLL.cal_position(main=self) - previous) < 0.02:
-                logger.info('Dock page did not move, survey finished')
-                break
-            swipe_count += 1
             page += 1
-            scanner.move((0, -self.DOCK_PAGE_DELTA_Y))
-            scanned = False
-        return records, last_page_ships, page + 1, positions
+            raw_previous = raw
+            ships = [s for s in raw if s.satisfy_limitation(scanner.limitaion)]
+            last_page_ships = ships
+            for index, ship in enumerate(ships):
+                records.append(DockShipRecord(ship=ship, page=page, index=index))
+            scanner.move((0, -self.DOCK_ROW_HEIGHT))
+        return records, last_page_ships, page + 1
+
+    def _dock_relocate_scan(self, page, scanner):
+        """
+        Touch-drag back to a surveyed page and re-scan it fresh, because
+        ship buttons recorded during the survey are stale after dragging.
+
+        Args:
+            page (int): 0-based row-step recorded by _dock_survey().
+            scanner (ShipScanner): fresh scanner with the survey limitation.
+
+        Returns:
+            list[Ship] or None: fresh filtered scan of that page, None when
+                the view could not be reproduced.
+        """
+        # Back to the top: drag the view downward (two rows per drag) until
+        # it stops moving. Reverse drags clamp at the top, never overshoot.
+        previous = None
+        for _ in range(page + 3):
+            raw = self._dock_scan_view(scanner)
+            signature = self._dock_signature(raw)
+            if signature == previous:
+                break
+            previous = signature
+            p1, p2 = self.DOCK_GRID_DRAG_DOWN
+            self.device.drag(p1, p2, point_random=(0, 0, 0, 0), hold_duration=0.15,
+                             name='DOCK_GRID_DRAG')
+        else:
+            logger.warning('Dock view did not return to the top, skip relocation')
+            return None
+        # Forward to the recorded offset, one card row per drag; targets
+        # below the last aligned page are never requested.
+        for _ in range(page):
+            p1, p2 = self.DOCK_GRID_DRAG_UP
+            self.device.drag(p1, p2, point_random=(0, 0, 0, 0), hold_duration=0.15,
+                             name='DOCK_GRID_DRAG')
+        raw = self._dock_scan_view(scanner)
+        return [s for s in raw if s.satisfy_limitation(scanner.limitaion)]
 
     def _dock_assign(self, arg, row, factions, fleet_number, rotate_level,
                      level_min, level_max, emotion_min, descending,
@@ -654,7 +706,7 @@ class FleetScheduler(Dock):
         scanner_kwargs = dict(
             level=(level_min, level_max), emotion=(emotion_min, 150), fleet=None, status='free')
         scanner = ShipScanner(**scanner_kwargs)
-        records, last_page_ships, pages, positions = self._dock_survey(scanner)
+        records, last_page_ships, pages = self._dock_survey(scanner)
         candidates = [record for record in records if record.ship.fleet == 0]
         in_farm = [record.ship for record in records if record.ship.fleet == fleet_number]
 
@@ -682,14 +734,12 @@ class FleetScheduler(Dock):
         if record.page == pages - 1:
             target = record.ship
         else:
-            # Buttons of earlier pages are stale after scrolling; scroll
-            # back to the recorded position and re-scan for a fresh click.
-            logger.info(f'Scroll back to page {record.page + 1} for the candidate')
-            DOCK_SCROLL.set(positions[record.page], main=self, random_range=(0, 0))
-            self.device.screenshot()
-            self.handle_dock_cards_loading()
+            # Buttons of earlier pages are stale after dragging; drag back
+            # to the recorded row and re-scan for a fresh click.
+            logger.info(f'Drag back to page {record.page + 1} for the candidate')
             fresh = ShipScanner(**scanner_kwargs)
-            target = match_record(fresh.scan(self.device.image, output=False), record)
+            ships = self._dock_relocate_scan(record.page, fresh)
+            target = match_record(ships, record) if ships is not None else None
         if target is None:
             logger.warning('FleetScheduler: candidate is no longer visible after scrolling, skip')
             self.dock_reset()
