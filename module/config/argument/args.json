@@ -2261,18 +2261,18 @@
         "display": "hide"
       }
     },
-    "Dorm": {
-      "Collect": {
+    "DormFill": {
+      "Enable": {
         "type": "checkbox",
-        "value": true
+        "value": false
       },
-      "Feed": {
-        "type": "checkbox",
-        "value": true
-      },
-      "FeedFilter": {
-        "type": "textarea",
-        "value": "20000 > 10000 > 5000 > 3000 > 2000 > 1000"
+      "Mode": {
+        "type": "select",
+        "value": "rest",
+        "option": [
+          "rest",
+          "train"
+        ]
       }
     },
     "Storage": {

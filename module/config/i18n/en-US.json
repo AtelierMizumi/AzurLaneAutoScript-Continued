@@ -1555,22 +1555,20 @@
       "help": "The farm fleet group arranged first last time, managed automatically."
     }
   },
-  "Dorm": {
+  "DormFill": {
     "_info": {
-      "name": "Dorm Settings",
-      "help": ""
+      "name": "Dorm Placement",
+      "help": "Azdaily fork. Fill empty slots of the reworked dorm (Train / Rest tabs) with rotation candidates: ships of the research target's factions, not in any fleet, not already placed in the dorm. Runs once before each sortie task when enabled. Ships closest to the rotation level are placed first."
     },
-    "Collect": {
-      "name": "Collect Coins and Loves",
-      "help": ""
+    "Enable": {
+      "name": "Fill Empty Dorm Slots",
+      "help": "Enable to let FleetScheduler place candidates into empty dorm slots before sorties."
     },
-    "Feed": {
-      "name": "Restock Dorm Snacks",
-      "help": ""
-    },
-    "FeedFilter": {
-      "name": "Snack Filter",
-      "help": "Generally does not need to be modified or re-arranged but can do so if desired"
+    "Mode": {
+      "name": "Tab",
+      "help": "Which dorm tab to fill. `rest` recovers morale, `train` grants EXP over time.",
+      "rest": "rest",
+      "train": "train"
     }
   },
   "EventGeneral": {
@@ -1864,6 +1862,24 @@
     "CustomFilter": {
       "name": "Custom Research Priority",
       "help": "To use your own filter, set \"Preset Filter Select\" to \"custom\". All options have been defined at  <https://github.com/LmeSzinc/AzurLaneAutoScript/wiki/filter_string_en>"
+    }
+  },
+  "Dorm": {
+    "_info": {
+      "name": "Dorm Settings",
+      "help": ""
+    },
+    "Collect": {
+      "name": "Collect Coins and Loves",
+      "help": ""
+    },
+    "Feed": {
+      "name": "Restock Dorm Snacks",
+      "help": ""
+    },
+    "FeedFilter": {
+      "name": "Snack Filter",
+      "help": "Generally does not need to be modified or re-arranged but can do so if desired"
     }
   },
   "BuyFurniture": {

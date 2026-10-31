@@ -349,7 +349,7 @@ Rotation:
     type: textarea
     display: hide
     value: ''
-Dorm:
+DormFill:
   Enable: false
   Mode:
     value: rest

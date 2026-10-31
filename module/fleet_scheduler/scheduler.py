@@ -266,11 +266,11 @@ class FleetScheduler(DormPlacement, Dock):
         Main chapters address farm fleets by MainNumber (0 disables the
         group there), event stages by Number.
         """
-        if deep_get(self.config.data, keys='FleetScheduler.Dorm.Enable', default=False):
+        if deep_get(self.config.data, keys='FleetScheduler.DormFill.Enable', default=False):
             try:
                 self.ui_ensure(page_dorm)
                 self.dorm_fill(
-                    mode=deep_get(self.config.data, keys='FleetScheduler.Dorm.Mode', default='rest'),
+                    mode=deep_get(self.config.data, keys='FleetScheduler.DormFill.Mode', default='rest'),
                     factions=self._dorm_factions(),
                     level_max=self._rotation_args()[0] or 125)
             except Exception as e:
