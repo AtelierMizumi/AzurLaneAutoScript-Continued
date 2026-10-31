@@ -13,3 +13,12 @@ FLEET_1_BACKLINE_2 = Button(area={'cn': (514, 195, 558, 239), 'en': (514, 195, 5
 FLEET_1_VANGUARD_2 = Button(area={'cn': (830, 195, 872, 237), 'en': (830, 195, 872, 237), 'jp': (830, 195, 872, 237), 'tw': (830, 195, 872, 237)}, color={'cn': (53, 56, 62), 'en': (53, 56, 62), 'jp': (53, 56, 62), 'tw': (53, 56, 62)}, button={'cn': (830, 195, 872, 237), 'en': (830, 195, 872, 237), 'jp': (830, 195, 872, 237), 'tw': (830, 195, 872, 237)}, file=None, name='FLEET_1_VANGUARD_2')
 FLEET_2_BACKLINE_2 = Button(area={'cn': (514, 309, 558, 352), 'en': (514, 309, 558, 352), 'jp': (514, 309, 558, 352), 'tw': (514, 309, 558, 352)}, color={'cn': (62, 58, 60), 'en': (62, 58, 60), 'jp': (62, 58, 60), 'tw': (62, 58, 60)}, button={'cn': (514, 309, 558, 352), 'en': (514, 309, 558, 352), 'jp': (514, 309, 558, 352), 'tw': (514, 309, 558, 352)}, file=None, name='FLEET_2_BACKLINE_2')
 FLEET_2_VANGUARD_2 = Button(area={'cn': (830, 309, 872, 351), 'en': (830, 309, 872, 351), 'jp': (830, 309, 872, 351), 'tw': (830, 309, 872, 351)}, color={'cn': (51, 54, 61), 'en': (51, 54, 61), 'jp': (51, 54, 61), 'tw': (51, 54, 61)}, button={'cn': (830, 309, 872, 351), 'en': (830, 309, 872, 351), 'jp': (830, 309, 872, 351), 'tw': (830, 309, 872, 351)}, file=None, name='FLEET_2_VANGUARD_2')
+
+# Fleet drop-up menu on the formation screen (page_fleet): the opener chip
+# "Surface Fleet | Fleet N" sits bottom left, tapping it lists fleets 6
+# (top row) to 1 (bottom row) inside FLEET_MENU_BAR. Hand-derived from a
+# live EN screenshot (1280x720, 2026-10-31), click-only anchors (file=None).
+# Menu-open detection counts the orange current-fleet highlight inside
+# FLEET_MENU_BAR, see scheduler.py.
+FLEET_MENU_OPEN = Button(area={'cn': (25, 645, 355, 705), 'en': (25, 645, 355, 705), 'jp': (25, 645, 355, 705), 'tw': (25, 645, 355, 705)}, color={'cn': (84, 106, 144), 'en': (84, 106, 144), 'jp': (84, 106, 144), 'tw': (84, 106, 144)}, button={'cn': (25, 645, 355, 705), 'en': (25, 645, 355, 705), 'jp': (25, 645, 355, 705), 'tw': (25, 645, 355, 705)}, file=None, name='FLEET_MENU_OPEN')
+FLEET_MENU_BAR = Button(area={'cn': (150, 310, 360, 640), 'en': (150, 310, 360, 640), 'jp': (150, 310, 360, 640), 'tw': (150, 310, 360, 640)}, color={'cn': (52, 72, 102), 'en': (52, 72, 102), 'jp': (52, 72, 102), 'tw': (52, 72, 102)}, button={'cn': (150, 310, 360, 640), 'en': (150, 310, 360, 640), 'jp': (150, 310, 360, 640), 'tw': (150, 310, 360, 640)}, file=None, name='FLEET_MENU_BAR')

@@ -3,6 +3,7 @@ from collections import namedtuple
 
 import numpy as np
 
+from module.base.button import Button
 from module.base.timer import Timer
 from module.base.utils import rgb2gray
 from module.config.deep import deep_get
@@ -371,9 +372,60 @@ class FleetScheduler(Dock):
 
     # ---------- formation screen (main chapters) ----------
 
+    # Geometry of the fleet drop-up menu, measured on a live EN screenshot:
+    # six rows of ~54px, fleet 6 on the top row and fleet 1 on the bottom.
+    FLEET_MENU_ROW1_CENTER_Y = 607
+    FLEET_MENU_ROW_STEP_Y = 53.8
+    # The current-fleet row is highlighted orange inside the menu; the
+    # formation screen has no orange in that area while the menu is closed
+    # (12 stray pixels measured vs 6396 when open).
+    FLEET_MENU_ORANGE = (234, 186, 86)
+    FLEET_MENU_OPEN_COUNT = 500
+
+    def _fleet_menu_open(self):
+        return self.image_color_count(
+            fleet_assets.FLEET_MENU_BAR, color=self.FLEET_MENU_ORANGE,
+            threshold=45, count=self.FLEET_MENU_OPEN_COUNT)
+
+    def _fleet_menu_button(self, index):
+        center = self.FLEET_MENU_ROW1_CENTER_Y - (index - 1) * self.FLEET_MENU_ROW_STEP_Y
+        area = (152, int(center - 22), 355, int(center + 22))
+        return Button(area=area, color=(), button=area, name=f'FLEET_MENU_INDEX_{index}')
+
+    def _fleet_menu_click_open(self):
+        click_timer = Timer(1.5, count=3)
+        for _ in self.loop(timeout=8):
+            if self._fleet_menu_open():
+                return True
+            if click_timer.reached():
+                self.device.click(fleet_assets.FLEET_MENU_OPEN)
+                click_timer.reset()
+        logger.warning('FleetScheduler: fleet drop-up menu did not open')
+        return False
+
+    def _fleet_menu_ensure_closed(self):
+        if self._fleet_menu_open():
+            self.device.click(fleet_assets.FLEET_MENU_OPEN)
+
+    def _switch_fleet_dropdown(self, number):
+        """
+        Select a fleet through the fleet drop-up menu at the bottom left
+        of the formation screen.
+
+        Returns:
+            bool: True if the menu is open and the row has been clicked;
+                the caller verifies the fleet index afterwards. False when
+                the menu is unavailable and arrows should be used.
+        """
+        if not self._fleet_menu_click_open():
+            return False
+        self.device.click(self._fleet_menu_button(number))
+        return True
+
     def _switch_fleet(self, number):
         """
-        Select a fleet on the formation screen.
+        Select a fleet on the formation screen, through the fleet drop-up
+        menu with the arrow buttons as fallback.
 
         Returns:
             bool: True if the fleet is displayed.
@@ -389,8 +441,11 @@ class FleetScheduler(Dock):
             if diff == 0:
                 return True
             if retry.reached():
-                button = FLEET_NEXT if diff > 0 else FLEET_PREV
-                self.device.multi_click(button, n=min(abs(diff), 6), interval=(0.2, 0.3))
+                if not self._switch_fleet_dropdown(number):
+                    logger.info('Fleet menu unavailable, fall back to arrows')
+                    self._fleet_menu_ensure_closed()
+                    button = FLEET_NEXT if diff > 0 else FLEET_PREV
+                    self.device.multi_click(button, n=min(abs(diff), 6), interval=(0.2, 0.3))
                 retry.reset()
         logger.warning(f'FleetScheduler: failed to switch to fleet {number}, skip')
         return False
