@@ -564,12 +564,23 @@ class FleetScheduler(Dock):
         positions = []
         page = 0
         swipe_count = 0
+        scanned = False
         disappear_confirm = Timer(2, count=6)
         while 1:
             self.device.screenshot()
             if self.appear(DOCK_EMPTY):
                 logger.info('Dock empty, survey finished')
                 break
+            self.handle_dock_cards_loading()
+            if not scanned:
+                # Scan the current view once; re-iterations while waiting
+                # for the scroll bar must not duplicate the records.
+                ships = scanner.scan(self.device.image, output=False)
+                last_page_ships = ships
+                for index, ship in enumerate(ships):
+                    records.append(DockShipRecord(ship=ship, page=page, index=index))
+                scanned = True
+
             if not DOCK_SCROLL.appear(main=self):
                 disappear_confirm.start()
                 if disappear_confirm.reached():
@@ -577,12 +588,10 @@ class FleetScheduler(Dock):
                     break
                 continue
             disappear_confirm.clear()
-            self.handle_dock_cards_loading()
-            ships = scanner.scan(self.device.image, output=False)
-            last_page_ships = ships
-            for index, ship in enumerate(ships):
-                records.append(DockShipRecord(ship=ship, page=page, index=index))
-            positions.append(DOCK_SCROLL.cal_position(main=self))
+            # The bar can flicker mid-animation; fall back to 0.0 so page
+            # indexes stay aligned for relocation.
+            positions.append(
+                DOCK_SCROLL.cal_position(main=self) if DOCK_SCROLL.appear(main=self) else 0.0)
 
             if DOCK_SCROLL.at_bottom(main=self):
                 logger.attr('Dock survey', f'{page + 1} page(s), bottom reached')
@@ -599,6 +608,7 @@ class FleetScheduler(Dock):
             swipe_count += 1
             page += 1
             scanner.move((0, -self.DOCK_PAGE_DELTA_Y))
+            scanned = False
         return records, last_page_ships, page + 1, positions
 
     def _dock_assign(self, arg, row, factions, fleet_number, rotate_level,
