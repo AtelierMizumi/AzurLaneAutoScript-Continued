@@ -99,9 +99,9 @@ class FleetScheduler(Dock):
 
     - Main chapters (folder `campaign_main`): the select-fleet popup does
       not allow member editing, so fleets are arranged on the formation
-      screen (page_fleet) before entering the map. Only the flagship and
-      the vanguard lead have fixed swap hotspots there, which maps to the
-      `Flagship` and `Vanguard1` slot args. Hooked in CampaignRun.run().
+      screen (page_fleet) before entering the map. Tapping the ship on
+      any of the six platforms opens the single-slot dock, which maps to
+      all six slot args. Hooked in CampaignRun.run().
     - Event and war-archives stages: member editing is allowed on the
       select-fleet popup, so all six slots per fleet are arranged right
       on the preparation screen. Hooked in FleetPreparation.fleet_preparation().
@@ -123,10 +123,16 @@ class FleetScheduler(Dock):
         'Vanguard3': ('VANGUARD_3', 'vanguard'),
     }
 
-    # Slots editable on the formation screen (main chapters).
+    # Slots editable on the formation screen (main chapters). Tapping the
+    # ship on a platform opens the single-slot dock; all six slots work,
+    # the two known upstream hotspots cover the flagship and vanguard lead.
     FORMATION_SLOTS = {
+        'Backline1': ('main', fleet_assets.FLEET_FORMATION_BACKLINE_1),
         'Flagship': ('main', FLEET_ENTER_FLAGSHIP),
+        'Backline3': ('main', fleet_assets.FLEET_FORMATION_BACKLINE_3),
         'Vanguard1': ('vanguard', FLEET_ENTER),
+        'Vanguard2': ('vanguard', fleet_assets.FLEET_FORMATION_VANGUARD_2),
+        'Vanguard3': ('vanguard', fleet_assets.FLEET_FORMATION_VANGUARD_3),
     }
 
     # Flatness of a slot anchor below this standard deviation is
@@ -452,8 +458,8 @@ class FleetScheduler(Dock):
 
     def _assign_formation_slot(self, arg, row, hotspot, factions, fleet_number):
         """
-        Fill or rotate the flagship / vanguard lead of the displayed
-        fleet, from the formation screen.
+        Fill or rotate one slot of the displayed fleet, from the formation
+        screen (tap the platform's ship to open the single-slot dock).
 
         Returns:
             bool: True if the slot has been (re)assigned.

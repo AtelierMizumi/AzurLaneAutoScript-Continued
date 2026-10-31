@@ -1300,7 +1300,7 @@
   "FarmFleet1": {
     "_info": {
       "name": "Farm Fleet 1",
-      "help": "Azdaily fork. Farm fleet A = your fleet #Number. Main chapters are arranged on the Formation screen (flagship and vanguard lead only, the game does not allow member editing on their select-fleet popup); event stages arrange all six slots right on the select-fleet popup. Fleets not listed here are never touched."
+      "help": "Azdaily fork. Farm fleet A = your fleet #Number. Main chapters are arranged on the Formation screen (all six slots, tapping each platform opens the single-slot dock); event stages arrange all six slots right on the select-fleet popup. Fleets not listed here are never touched."
     },
     "Number": {
       "name": "Fleet Number",
@@ -1308,11 +1308,11 @@
     },
     "MainNumber": {
       "name": "Main Chapter Fleet Number",
-      "help": "Your fleet number for main chapter farming, arranged on the Formation screen (flagship and vanguard lead only), 0 to disable. Event stages still use Fleet Number. Suggested: 1 and 2 on the two groups to arrange both fleets of a Main sortie."
+      "help": "Your fleet number for main chapter farming, arranged on the Formation screen (all six slots), 0 to disable. Event stages still use Fleet Number. Suggested: 1 and 2 on the two groups to arrange both fleets of a Main sortie."
     },
     "Backline1": {
       "name": "Backline Left",
-      "help": "Main fleet slot (event preparation screens only). `research` follows the shipyard target's current phase, a faction fills that faction, `keep` leaves the slot untouched.",
+      "help": "Main fleet slot (event preparation screens, and the main-chapter Formation screen). `research` follows the shipyard target's current phase, a faction fills that faction, `keep` leaves the slot untouched.",
       "keep": "keep",
       "research": "research",
       "eagle": "eagle",
@@ -1342,7 +1342,7 @@
     },
     "Backline3": {
       "name": "Backline Right",
-      "help": "Main fleet slot (event preparation screens only). `research` follows the shipyard target's current phase, a faction fills that faction, `keep` leaves the slot untouched.",
+      "help": "Main fleet slot (event preparation screens, and the main-chapter Formation screen). `research` follows the shipyard target's current phase, a faction fills that faction, `keep` leaves the slot untouched.",
       "keep": "keep",
       "research": "research",
       "eagle": "eagle",
@@ -1372,7 +1372,7 @@
     },
     "Vanguard2": {
       "name": "Vanguard Middle",
-      "help": "Vanguard slot (event preparation screens only). `research` follows the shipyard target's current phase, a faction fills that faction, `keep` leaves the slot untouched.",
+      "help": "Vanguard slot (event preparation screens, and the main-chapter Formation screen). `research` follows the shipyard target's current phase, a faction fills that faction, `keep` leaves the slot untouched.",
       "keep": "keep",
       "research": "research",
       "eagle": "eagle",
@@ -1387,7 +1387,7 @@
     },
     "Vanguard3": {
       "name": "Vanguard Rear",
-      "help": "Vanguard slot (event preparation screens only). `research` follows the shipyard target's current phase, a faction fills that faction, `keep` leaves the slot untouched.",
+      "help": "Vanguard slot (event preparation screens, and the main-chapter Formation screen). `research` follows the shipyard target's current phase, a faction fills that faction, `keep` leaves the slot untouched.",
       "keep": "keep",
       "research": "research",
       "eagle": "eagle",
@@ -1404,7 +1404,7 @@
   "FarmFleet2": {
     "_info": {
       "name": "Farm Fleet 2",
-      "help": "Azdaily fork. Farm fleet B = your fleet #Number. Main chapters are arranged on the Formation screen (flagship and vanguard lead only, the game does not allow member editing on their select-fleet popup); event stages arrange all six slots right on the select-fleet popup. Fleets not listed here are never touched."
+      "help": "Azdaily fork. Farm fleet B = your fleet #Number. Main chapters are arranged on the Formation screen (all six slots, tapping each platform opens the single-slot dock); event stages arrange all six slots right on the select-fleet popup. Fleets not listed here are never touched."
     },
     "Number": {
       "name": "Fleet Number",
@@ -1412,11 +1412,11 @@
     },
     "MainNumber": {
       "name": "Main Chapter Fleet Number",
-      "help": "Your fleet number for main chapter farming, arranged on the Formation screen (flagship and vanguard lead only), 0 to disable. Event stages still use Fleet Number. Suggested: 1 and 2 on the two groups to arrange both fleets of a Main sortie."
+      "help": "Your fleet number for main chapter farming, arranged on the Formation screen (all six slots), 0 to disable. Event stages still use Fleet Number. Suggested: 1 and 2 on the two groups to arrange both fleets of a Main sortie."
     },
     "Backline1": {
       "name": "Backline Left",
-      "help": "Main fleet slot (event preparation screens only). `research` follows the shipyard target's current phase, a faction fills that faction, `keep` leaves the slot untouched.",
+      "help": "Main fleet slot (event preparation screens, and the main-chapter Formation screen). `research` follows the shipyard target's current phase, a faction fills that faction, `keep` leaves the slot untouched.",
       "keep": "keep",
       "research": "research",
       "eagle": "eagle",
@@ -1446,7 +1446,7 @@
     },
     "Backline3": {
       "name": "Backline Right",
-      "help": "Main fleet slot (event preparation screens only). `research` follows the shipyard target's current phase, a faction fills that faction, `keep` leaves the slot untouched.",
+      "help": "Main fleet slot (event preparation screens, and the main-chapter Formation screen). `research` follows the shipyard target's current phase, a faction fills that faction, `keep` leaves the slot untouched.",
       "keep": "keep",
       "research": "research",
       "eagle": "eagle",
@@ -1476,7 +1476,7 @@
     },
     "Vanguard2": {
       "name": "Vanguard Middle",
-      "help": "Vanguard slot (event preparation screens only). `research` follows the shipyard target's current phase, a faction fills that faction, `keep` leaves the slot untouched.",
+      "help": "Vanguard slot (event preparation screens, and the main-chapter Formation screen). `research` follows the shipyard target's current phase, a faction fills that faction, `keep` leaves the slot untouched.",
       "keep": "keep",
       "research": "research",
       "eagle": "eagle",
@@ -1491,7 +1491,7 @@
     },
     "Vanguard3": {
       "name": "Vanguard Rear",
-      "help": "Vanguard slot (event preparation screens only). `research` follows the shipyard target's current phase, a faction fills that faction, `keep` leaves the slot untouched.",
+      "help": "Vanguard slot (event preparation screens, and the main-chapter Formation screen). `research` follows the shipyard target's current phase, a faction fills that faction, `keep` leaves the slot untouched.",
       "keep": "keep",
       "research": "research",
       "eagle": "eagle",
