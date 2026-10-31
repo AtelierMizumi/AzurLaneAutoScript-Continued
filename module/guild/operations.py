@@ -356,24 +356,47 @@ class GuildOperations(GuildBase):
         Pages:
             in: page_guild, guild operation, operation dispatch preparation (GUILD_DISPATCH_RECOMMEND)
             out: page_guild, guild operation, operation dispatch preparation (GUILD_DISPATCH_RECOMMEND)
+
+        Returns:
+            bool: True if a fleet has been dispatched, False if the
+                dispatch was canceled because the game kept rejecting it.
         """
         dispatched = False
+        # Azdaily fork: operations with special compositions the recommend
+        # can't satisfy (e.g. "2 Admiral Hipper-class CA") make the game
+        # reject every dispatch with a toast, which used to spin this loop
+        # until GameTooManyClickError. Cancel instead and let the caller
+        # skip the remaining fleets.
+        fleet_clicks = 0
+        recommend_clicks = 0
         while 1:
             if skip_first_screenshot:
                 skip_first_screenshot = False
             else:
                 self.device.screenshot()
 
+            if fleet_clicks >= 3 or recommend_clicks >= 6:
+                if self.appear(GUILD_OPERATIONS_ACTIVE_CHECK, offset=(20, 20)):
+                    logger.warning('Guild dispatch canceled, the game kept rejecting it '
+                                   '(possibly an unsatisfied special composition)')
+                    return False
+                if self.handle_popup_confirm('GUILD_DISPATCH_CANCEL'):
+                    continue
+                self.appear_then_click(GUILD_DISPATCH_CLOSE, offset=(20, 20), interval=3)
+                continue
+
             if self.appear(GUILD_DISPATCH_FLEET_UNFILLED, offset=(20, 20), interval=3):
                 # Don't use offset here, because GUILD_DISPATCH_FLEET_UNFILLED only has a difference in colors
                 # Use long interval because the game needs a few seconds to choose the ships
                 self.device.click(GUILD_DISPATCH_RECOMMEND)
+                recommend_clicks += 1
                 continue
             if not dispatched and self.appear(GUILD_DISPATCH_FLEET, offset=(20, 20), interval=3):
                 # GUILD_DISPATCH_FLEET and GUILD_DISPATCH_FLEET_UNFILLED has same feature but different colors
                 # check background blue for double check
                 if self.image_color_count(GUILD_DISPATCH_FLEET, color=(82, 93, 221), threshold=20, count=500):
                     self.device.click(GUILD_DISPATCH_FLEET)
+                    fleet_clicks += 1
                 else:
                     self.interval_clear(GUILD_DISPATCH_FLEET)
                 continue
@@ -386,7 +409,7 @@ class GuildOperations(GuildBase):
             if self.appear(GUILD_DISPATCH_IN_PROGRESS):
                 # In first dispatch, it will show GUILD_DISPATCH_IN_PROGRESS
                 logger.info('Fleet dispatched, dispatch in progress')
-                break
+                return True
             if dispatched and self.appear(GUILD_DISPATCH_FLEET, offset=(20, 20), interval=3):
                 # GUILD_DISPATCH_FLEET and GUILD_DISPATCH_FLEET_UNFILLED has same feature but different colors
                 # check background blue for double check
@@ -396,7 +419,7 @@ class GuildOperations(GuildBase):
                     # because GUILD_DISPATCH_FLEET still shows after clicking recommend before dispatching
                     # _guild_operations_dispatch() will retry it if haven't dispatched
                     logger.info('Fleet dispatched')
-                    break
+                    return True
 
     def _guild_operations_dispatch_exit(self, skip_first_screenshot=True):
         """
@@ -451,7 +474,11 @@ class GuildOperations(GuildBase):
         for _ in range(5):
             if self._guild_operations_dispatch_enter():
                 self._guild_operations_dispatch_switch_fleet()
-                self._guild_operations_dispatch_execute()
+                if not self._guild_operations_dispatch_execute():
+                    # Dispatch canceled (game keeps rejecting, e.g. an
+                    # unsatisfied special composition), skip the rest
+                    self._guild_operations_dispatch_exit()
+                    return True
                 self._guild_operations_dispatch_exit()
             else:
                 return True
