@@ -1,5 +1,6 @@
 import json
 from collections import namedtuple
+from enum import Enum
 
 import numpy as np
 
@@ -34,6 +35,32 @@ class FleetSchedulerError(Exception):
 # buttons go stale once the dock scrolls, page/index identify the record
 # for scrolling back before the click.
 DockShipRecord = namedtuple('DockShipRecord', ['ship', 'page', 'index'])
+
+
+class StageFleetMode(Enum):
+    PRESET_FORMATION = 'preset_formation'
+    DEDICATED_SLOT = 'dedicated_slot'
+
+
+def classify_stage_fleet_mode(folder: str, stage_name: str, mode: str = 'normal') -> StageFleetMode:
+    stage_name = stage_name.lower().strip()
+    if 'sp' in stage_name:
+        return StageFleetMode.DEDICATED_SLOT
+    if folder == 'campaign_main':
+        if mode == 'hard':
+            return StageFleetMode.DEDICATED_SLOT
+        return StageFleetMode.PRESET_FORMATION
+    if stage_name.startswith(('a', 'b')):
+        return StageFleetMode.PRESET_FORMATION
+    if stage_name.startswith(('c', 'd')):
+        return StageFleetMode.DEDICATED_SLOT
+    if stage_name in ('t1', 't2', 't3', '1', '2', '3'):
+        return StageFleetMode.PRESET_FORMATION
+    if stage_name in ('t4', 't5', 't6', '4', '5', '6'):
+        return StageFleetMode.DEDICATED_SLOT
+    if stage_name.startswith('th'):
+        return StageFleetMode.DEDICATED_SLOT
+    return StageFleetMode.DEDICATED_SLOT if mode == 'hard' else StageFleetMode.PRESET_FORMATION
 
 
 def pick_candidate_record(records, descending):
@@ -245,17 +272,17 @@ class FleetScheduler(DormPlacement, Dock):
 
     # ---------- entries ----------
 
-    def before_stage(self):
+    def before_stage(self, name: str = '', folder: str = '', mode: str = 'normal'):
         """
         Called once per campaign task run, from CampaignRun.run(), before
         entering any map. Refreshes the research target cache, syncs the
-        dorm selection (optional) and, for main chapters, arranges farm
+        dorm selection (optional) and, for preset stages, arranges farm
         fleets on the formation screen.
-
-        Main chapters address farm fleets by MainNumber (0 disables the
-        group there), event stages by Number.
         """
-        folder = getattr(self.config, 'Campaign_Event', '')
+        folder = folder or getattr(self.config, 'Campaign_Event', '')
+        stage_mode = classify_stage_fleet_mode(folder, name or getattr(self.config, 'Campaign_Name', ''), mode)
+        if stage_mode == StageFleetMode.DEDICATED_SLOT:
+            return False
         number_arg = 'MainNumber' if folder == 'campaign_main' else 'Number'
         fleets = self.farm_fleets(self.config.data, number_arg=number_arg)
 
@@ -284,10 +311,10 @@ class FleetScheduler(DormPlacement, Dock):
         if not fleets:
             return False
         logger.hr('Fleet scheduler', level=1)
-        if folder == 'campaign_main':
-            fleets = self._alternate_order(fleets)
-            return self.assign_on_formation(fleets)
-        return False
+        # Preset stages (main normal + event normal T1-3 / A-B) use the
+        # 6-fleet formation screen; dedicated stages already returned.
+        fleets = self._alternate_order(fleets)
+        return self.assign_on_formation(fleets)
 
     def apply_on_preparation(self, role_fleets):
         """

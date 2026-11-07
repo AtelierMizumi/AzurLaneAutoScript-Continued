@@ -386,12 +386,13 @@ class CampaignRun(CampaignEvent):
         self.load_campaign(name, folder=folder)
 
         # Azdaily fork: FleetScheduler refreshes the shipyard research
-        # target cache and, for main chapters, arranges farm fleets on the
+        # target cache and, for preset stages, arranges farm fleets on the
         # formation screen before entering the map (the select-fleet popup
-        # does not allow member editing there).
+        # does not allow member editing there). Dedicated (hard) stages
+        # are gated inside before_stage via classify_stage_fleet_mode.
         try:
             from module.fleet_scheduler.scheduler import FleetScheduler
-            FleetScheduler(self.config, device=self.device).before_stage()
+            FleetScheduler(self.config, device=self.device).before_stage(name, folder, mode)
         except Exception as e:
             logger.warning(f'FleetScheduler before_stage error: {e}')
 

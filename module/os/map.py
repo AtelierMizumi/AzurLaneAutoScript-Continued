@@ -504,9 +504,8 @@ class OSMap(OSFleet, Map, GlobeCamera, StrategicSearchHandler):
                         break
                 else:
                     died_timer.reset()
-                # Clear stuck record only when auto search is actively running (ON)
+                self.device.stuck_record_clear()
                 if self.appear(AUTO_SEARCH_OS_MAP_OPTION_ON, offset=(5, 120)):
-                    self.device.stuck_record_clear()
                     auto_search_click_count = 0
             else:
                 died_timer.reset()
@@ -530,9 +529,9 @@ class OSMap(OSFleet, Map, GlobeCamera, StrategicSearchHandler):
                 unlock_checked = True
                 auto_search_click_count += 1
                 logger.info(f'Auto search option clicked, count={auto_search_click_count}')
-                if auto_search_click_count >= 4:
+                if auto_search_click_count >= 6:
                     logger.warning(
-                        'Auto search toggled 4 times without activation. '
+                        'Auto search toggled 6 times without activation. '
                         'Detected OpSi map UI/network freeze (protocol 33103 timeout). '
                         'Triggering client restart recovery.'
                     )

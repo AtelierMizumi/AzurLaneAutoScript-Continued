@@ -289,11 +289,14 @@ class FleetPreparation(InfoHandler):
 
         # Azdaily fork: fill/rotate farm-fleet slots by faction
         # (FleetScheduler task config) once per task run, right before
-        # battle. Main chapters are arranged on the formation screen
-        # instead (CampaignRun.run), the select-fleet popup does not
-        # allow member editing there.
-        if getattr(self.config, 'Campaign_Event', 'campaign_main') != 'campaign_main':
-            from module.fleet_scheduler.scheduler import FleetScheduler
+        # battle. Preset stages are arranged on the formation screen
+        # (CampaignRun.run); only dedicated (hard) stages edit slots here.
+        from module.fleet_scheduler.scheduler import (
+            FleetScheduler, StageFleetMode, classify_stage_fleet_mode)
+        if classify_stage_fleet_mode(
+                getattr(self.config, 'Campaign_Event', ''),
+                getattr(self.config, 'Campaign_Name', ''),
+                getattr(self.config, 'Campaign_Mode', 'normal')) == StageFleetMode.DEDICATED_SLOT:
             FleetScheduler(self.config, device=self.device).apply_on_preparation(
                 role_fleets=(self.config.Fleet_Fleet1, self.config.Fleet_Fleet2))
 

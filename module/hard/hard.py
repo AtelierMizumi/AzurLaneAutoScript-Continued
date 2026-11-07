@@ -40,11 +40,26 @@ class CampaignHard(CampaignRun):
             mode='hard'
         )
 
-        # Run
+        # Run — per-run retry so one MapDetectionError does not kill
+        # the remaining hard stages. Retry once per stage, then move on.
         remain = OCR_HARD_REMAIN.ocr(self.device.image)
         logger.attr('Remain', remain)
         for n in range(remain):
-            self.campaign.run()
+            try:
+                self.campaign.run()
+            except Exception as e:
+                logger.warning(f'Hard run {n + 1}/{remain} failed: {e}, retrying once')
+                try:
+                    self.campaign.ensure_auto_search_exit()
+                except Exception:
+                    pass
+                self.device.screenshot()
+                self.campaign.device.image = self.device.image
+                self.campaign.ensure_campaign_ui(name=self.config.Hard_HardStage, mode='hard')
+                try:
+                    self.campaign.run()
+                except Exception as e2:
+                    logger.warning(f'Hard run {n + 1}/{remain} failed again: {e2}, moving on')
 
         self.campaign.ensure_auto_search_exit()
         # self.campaign.equipment_take_off_when_finished()
